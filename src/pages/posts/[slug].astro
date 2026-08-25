@@ -33,6 +33,7 @@ if (!post) {
 	return Astro.redirect(localePath(locale, "/404"));
 }
 const resolvedLocale = fallbackLocale ? resolveLocale(fallbackLocale) : locale;
+const resolvedSlug = post.id.split("/").at(-1) ?? slug;
 
 if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
 
@@ -64,7 +65,7 @@ const { siteTitle } = resolveBlogSiteIdentity(await getSiteSettings());
 const seo = getSeoMeta(post, {
 	siteTitle,
 	siteUrl: Astro.url.origin,
-	path: localePath(resolvedLocale, `/posts/${post.id}`),
+	path: localePath(resolvedLocale, `/posts/${resolvedSlug}`),
 	defaultOgImage: featuredImageUrl,
 });
 
