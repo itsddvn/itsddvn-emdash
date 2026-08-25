@@ -7,6 +7,11 @@ import { defineConfig, fontProviders } from "astro/config";
 import emdash from "emdash/astro";
 
 export default defineConfig({
+	i18n: {
+		defaultLocale: "vi",
+		locales: ["vi", "en"],
+		fallback: { en: "vi" },
+	},
 	output: "server",
 	adapter: cloudflare(),
 	image: {
@@ -27,17 +32,21 @@ export default defineConfig({
 	fonts: [
 		{
 			provider: fontProviders.google(),
-			name: "Inter",
+			name: "Source Sans 3",
 			cssVariable: "--font-body",
 			weights: [400, 500, 600, 700],
+			styles: ["normal"],
+			subsets: ["latin", "latin-ext", "vietnamese"],
 			fallbacks: ["sans-serif"],
 		},
 		{
 			provider: fontProviders.google(),
-			name: "JetBrains Mono",
-			cssVariable: "--font-mono",
-			weights: [400, 500],
-			fallbacks: ["monospace"],
+			name: "Barlow Condensed",
+			cssVariable: "--font-heading",
+			weights: [500, 600, 700],
+			styles: ["normal"],
+			subsets: ["latin", "latin-ext", "vietnamese"],
+			fallbacks: ["sans-serif"],
 		},
 	],
 	devToolbar: { enabled: false },

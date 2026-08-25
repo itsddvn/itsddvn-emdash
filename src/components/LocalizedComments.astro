@@ -1,0 +1,85 @@
+---
+import { CommentForm, Comments } from "emdash/ui";
+import type { SiteLocale } from "../utils/i18n";
+
+interface Props {
+	collection: string;
+	contentId: string;
+	locale: SiteLocale;
+}
+
+const { collection, contentId, locale } = Astro.props;
+---
+
+<div class="localized-comments" data-comments-locale={locale}>
+	<Comments collection={collection} contentId={contentId} threaded />
+	<CommentForm collection={collection} contentId={contentId} />
+</div>
+
+<script>
+	const vietnameseText = new Map([
+		["No comments yet", "Chưa có bình luận"],
+		["1 Comment", "1 bình luận"],
+		["Name", "Tên"],
+		["Email", "Email"],
+		["Comment", "Bình luận"],
+		["Post Comment", "Gửi bình luận"],
+		["Submitting...", "Đang gửi..."],
+		["Comment submitted!", "Đã gửi bình luận."],
+		["Failed to submit comment.", "Không thể gửi bình luận."],
+		["Network error. Please try again.", "Lỗi kết nối. Vui lòng thử lại."],
+		["Like", "Thích"],
+	]);
+
+	function localizeCommentUi(root: HTMLElement) {
+		const heading = root.querySelector<HTMLElement>(".ec-comments-heading");
+		if (heading) {
+			const current = heading.textContent?.trim() ?? "";
+			const countMatch = /^(\d+) Comments$/.exec(current);
+			const translated = countMatch ? `${countMatch[1]} bình luận` : (vietnameseText.get(current) ?? current);
+			if (translated !== current) heading.textContent = translated;
+		}
+
+		for (const element of root.querySelectorAll<HTMLElement>(
+			".ec-comment-form-field > span, .ec-comment-form-submit, .ec-reaction-label",
+		)) {
+			const current = element.textContent?.trim() ?? "";
+			const translated = vietnameseText.get(current) ?? current;
+			if (translated !== current) element.textContent = translated;
+		}
+
+		for (const badge of root.querySelectorAll<HTMLElement>(".ec-comment-badge")) {
+			if (badge.getAttribute("aria-label") !== "Thành viên của trang") {
+				badge.setAttribute("aria-label", "Thành viên của trang");
+			}
+		}
+
+		for (const time of root.querySelectorAll<HTMLTimeElement>(".ec-comment-date[datetime]")) {
+			const value = new Date(time.dateTime);
+			if (!Number.isNaN(value.getTime())) {
+				const translated = value.toLocaleDateString("vi-VN", {
+					year: "numeric",
+					month: "long",
+					day: "numeric",
+				});
+				if (time.textContent !== translated) time.textContent = translated;
+			}
+		}
+
+		const status = root.querySelector<HTMLElement>(".ec-comment-form-status");
+		if (status) {
+			const current = status.textContent?.trim() ?? "";
+			const translated = vietnameseText.get(current) ?? current;
+			if (translated !== current) status.textContent = translated;
+		}
+	}
+
+	for (const root of document.querySelectorAll<HTMLElement>(
+		"[data-comments-locale='vi']:not([data-comments-localized])",
+	)) {
+		root.dataset.commentsLocalized = "true";
+		localizeCommentUi(root);
+		const observer = new MutationObserver(() => localizeCommentUi(root));
+		observer.observe(root, { childList: true, characterData: true, subtree: true });
+	}
+</script>

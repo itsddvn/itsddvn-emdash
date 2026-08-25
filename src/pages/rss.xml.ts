@@ -2,12 +2,16 @@ import type { APIRoute } from "astro";
 import { getEmDashCollection, getSiteSettings } from "emdash";
 
 import { resolveBlogSiteIdentity } from "../utils/site-identity";
+import { getMessages, localePath, resolveLocale } from "../utils/i18n";
 
-export const GET: APIRoute = async ({ site, url }) => {
-	const siteUrl = site?.toString() || url.origin;
-	const { siteTitle, siteTagline } = resolveBlogSiteIdentity(await getSiteSettings());
+export const GET: APIRoute = async ({ currentLocale, url }) => {
+	const locale = resolveLocale(currentLocale);
+	const copy = getMessages(locale);
+	const siteUrl = url.origin;
+	const { siteTitle } = resolveBlogSiteIdentity(await getSiteSettings());
 
 	const { entries: posts } = await getEmDashCollection("posts", {
+		locale,
 		orderBy: { published_at: "desc" },
 		limit: 20,
 	});
@@ -17,8 +21,8 @@ export const GET: APIRoute = async ({ site, url }) => {
 			if (!post.data.publishedAt) return null;
 			const pubDate = post.data.publishedAt.toUTCString();
 
-			const postUrl = `${siteUrl}/posts/${post.id}`;
-			const title = escapeXml(post.data.title || "Untitled");
+			const postUrl = new URL(localePath(locale, `/posts/${post.id}`), siteUrl).toString();
+			const title = escapeXml(post.data.title || copy.untitled);
 			const description = escapeXml(post.data.excerpt || "");
 
 			return `    <item>
@@ -32,14 +36,16 @@ export const GET: APIRoute = async ({ site, url }) => {
 		.filter(Boolean)
 		.join("\n");
 
+	const channelUrl = new URL(localePath(locale, "/"), siteUrl).toString();
+	const feedUrl = new URL(localePath(locale, "/rss.xml"), siteUrl).toString();
 	const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>${escapeXml(siteTitle)}</title>
-    <description>${escapeXml(siteTagline)}</description>
-    <link>${siteUrl}</link>
-    <atom:link href="${siteUrl}/rss.xml" rel="self" type="application/rss+xml"/>
-    <language>en-us</language>
+    <description>${escapeXml(copy.siteTagline)}</description>
+    <link>${channelUrl}</link>
+    <atom:link href="${feedUrl}" rel="self" type="application/rss+xml"/>
+    <language>${locale === "vi" ? "vi-VN" : "en-US"}</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
 ${items}
   </channel>

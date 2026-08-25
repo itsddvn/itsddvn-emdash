@@ -1,6 +1,7 @@
 {
 	"$schema": "https://emdashcms.com/seed.schema.json",
 	"version": "1",
+	"defaultLocale": "vi",
 	"meta": {
 		"name": "Blog Starter",
 		"description": "A blog with posts and pages",
@@ -15,7 +16,12 @@
 			"slug": "posts",
 			"label": "Posts",
 			"labelSingular": "Post",
-			"supports": ["drafts", "revisions", "search", "seo"],
+			"supports": [
+				"drafts",
+				"revisions",
+				"search",
+				"seo"
+			],
 			"commentsEnabled": true,
 			"fields": [
 				{
@@ -47,7 +53,11 @@
 			"slug": "pages",
 			"label": "Pages",
 			"labelSingular": "Page",
-			"supports": ["drafts", "revisions", "search"],
+			"supports": [
+				"drafts",
+				"revisions",
+				"search"
+			],
 			"fields": [
 				{
 					"slug": "title",
@@ -67,48 +77,147 @@
 	],
 	"taxonomies": [
 		{
+			"id": "tax:category:en",
 			"name": "category",
 			"label": "Categories",
 			"labelSingular": "Category",
 			"hierarchical": true,
-			"collections": ["posts"],
+			"collections": [
+				"posts"
+			],
+			"locale": "en",
 			"terms": [
 				{
+					"id": "term:category:development:en",
 					"slug": "development",
-					"label": "Development"
+					"label": "Development",
+					"locale": "en"
 				},
 				{
+					"id": "term:category:design:en",
 					"slug": "design",
-					"label": "Design"
+					"label": "Design",
+					"locale": "en"
 				},
 				{
+					"id": "term:category:notes:en",
 					"slug": "notes",
-					"label": "Notes"
+					"label": "Notes",
+					"locale": "en"
 				}
 			]
 		},
 		{
+			"id": "tax:category:vi",
+			"name": "category",
+			"label": "Chuyên mục",
+			"labelSingular": "Chuyên mục",
+			"hierarchical": true,
+			"collections": [
+				"posts"
+			],
+			"locale": "vi",
+			"translationOf": "tax:category:en",
+			"terms": [
+				{
+					"id": "term:category:development:vi",
+					"slug": "phat-trien",
+					"label": "Phát triển",
+					"locale": "vi",
+					"translationOf": "term:category:development:en"
+				},
+				{
+					"id": "term:category:design:vi",
+					"slug": "thiet-ke",
+					"label": "Thiết kế",
+					"locale": "vi",
+					"translationOf": "term:category:design:en"
+				},
+				{
+					"id": "term:category:notes:vi",
+					"slug": "ghi-chep",
+					"label": "Ghi chép",
+					"locale": "vi",
+					"translationOf": "term:category:notes:en"
+				}
+			]
+		},
+		{
+			"id": "tax:tag:en",
 			"name": "tag",
 			"label": "Tags",
 			"labelSingular": "Tag",
 			"hierarchical": false,
-			"collections": ["posts"],
+			"collections": [
+				"posts"
+			],
+			"locale": "en",
 			"terms": [
 				{
+					"id": "term:tag:webdev:en",
 					"slug": "webdev",
-					"label": "Web Development"
+					"label": "Web Development",
+					"locale": "en"
 				},
 				{
+					"id": "term:tag:opinion:en",
 					"slug": "opinion",
-					"label": "Opinion"
+					"label": "Opinion",
+					"locale": "en"
 				},
 				{
+					"id": "term:tag:tools:en",
 					"slug": "tools",
-					"label": "Tools"
+					"label": "Tools",
+					"locale": "en"
 				},
 				{
+					"id": "term:tag:creativity:en",
 					"slug": "creativity",
-					"label": "Creativity"
+					"label": "Creativity",
+					"locale": "en"
+				}
+			]
+		},
+		{
+			"id": "tax:tag:vi",
+			"name": "tag",
+			"label": "Thẻ",
+			"labelSingular": "Thẻ",
+			"hierarchical": false,
+			"collections": [
+				"posts"
+			],
+			"locale": "vi",
+			"translationOf": "tax:tag:en",
+			"terms": [
+				{
+					"id": "term:tag:webdev:vi",
+					"slug": "phat-trien-web",
+					"label": "Phát triển web",
+					"locale": "vi",
+					"translationOf": "term:tag:webdev:en"
+				},
+				{
+					"id": "term:tag:opinion:vi",
+					"slug": "quan-diem",
+					"label": "Quan điểm",
+					"locale": "vi",
+					"translationOf": "term:tag:opinion:en"
+				},
+				{
+					"id": "term:tag:tools:vi",
+					"slug": "cong-cu",
+					"label": "Công cụ",
+					"locale": "vi",
+					"translationOf": "term:tag:tools:en"
+				},
+				{
+					"id": "term:tag:creativity:vi",
+					"slug": "sang-tao",
+					"label": "Sáng tạo",
+					"locale": "vi",
+					"translationOf": "term:tag:creativity:en"
 				}
 			]
 		}
@@ -128,23 +237,64 @@
 	],
 	"menus": [
 		{
+			"id": "menu:primary:en",
 			"name": "primary",
 			"label": "Primary Navigation",
+			"locale": "en",
 			"items": [
 				{
+					"id": "item:primary:home:en",
 					"type": "custom",
 					"label": "Home",
-					"url": "/"
+					"url": "/en/",
+					"locale": "en"
 				},
 				{
+					"id": "item:primary:about:en",
 					"type": "custom",
 					"label": "About",
-					"url": "/pages/about"
+					"url": "/en/pages/about",
+					"locale": "en"
 				},
 				{
+					"id": "item:primary:posts:en",
 					"type": "custom",
 					"label": "Posts",
-					"url": "/posts"
+					"url": "/en/posts",
+					"locale": "en"
+				}
+			]
+		},
+		{
+			"id": "menu:primary:vi",
+			"name": "primary",
+			"label": "Điều hướng chính",
+			"locale": "vi",
+			"translationOf": "menu:primary:en",
+			"items": [
+				{
+					"id": "item:primary:home:vi",
+					"type": "custom",
+					"label": "Trang chủ",
+					"url": "/",
+					"locale": "vi",
+					"translationOf": "item:primary:home:en"
+				},
+				{
+					"id": "item:primary:about:vi",
+					"type": "custom",
+					"label": "Giới thiệu",
+					"url": "/pages/gioi-thieu",
+					"locale": "vi",
+					"translationOf": "item:primary:about:en"
+				},
+				{
+					"id": "item:primary:posts:vi",
+					"type": "custom",
+					"label": "Bài viết",
+					"url": "/posts",
+					"locale": "vi",
+					"translationOf": "item:primary:posts:en"
 				}
 			]
 		}
@@ -221,7 +371,12 @@
 			"slug": "newsletter-signup",
 			"title": "Newsletter Signup",
 			"description": "A call-to-action block for newsletter subscriptions",
-			"keywords": ["newsletter", "subscribe", "email", "cta"],
+			"keywords": [
+				"newsletter",
+				"subscribe",
+				"email",
+				"cta"
+			],
 			"source": "theme",
 			"content": [
 				{
@@ -254,7 +409,11 @@
 			"slug": "about-author",
 			"title": "About the Author",
 			"description": "Brief author bio for use in posts or pages",
-			"keywords": ["author", "bio", "about"],
+			"keywords": [
+				"author",
+				"bio",
+				"about"
+			],
 			"source": "theme",
 			"content": [
 				{
@@ -306,7 +465,44 @@
 							"_key": "k2"
 						}
 					]
-				}
+				},
+				"locale": "en"
+			},
+			{
+				"id": "about-vi",
+				"slug": "gioi-thieu",
+				"status": "published",
+				"data": {
+					"title": "Giới thiệu",
+					"content": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Nơi tôi viết về phần mềm, thiết kế và đôi khi là những suy nghĩ bất chợt. Không có lịch đăng bài, cũng không có chuỗi email tiếp thị. Chỉ là những điều tôi muốn ghi lại.",
+									"_key": "k1"
+								}
+							],
+							"_key": "k0"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Trang này được xây dựng bằng Astro và EmDash. Mã nguồn được công khai nếu bạn muốn tìm hiểu cách trang hoạt động.",
+									"_key": "k3"
+								}
+							],
+							"_key": "k2"
+						}
+					]
+				},
+				"locale": "vi",
+				"translationOf": "about"
 			}
 		],
 		"posts": [
@@ -409,8 +605,122 @@
 					}
 				],
 				"taxonomies": {
-					"category": ["development"],
-					"tag": ["opinion"]
+					"category": [
+						"development"
+					],
+					"tag": [
+						"opinion"
+					]
+				},
+				"locale": "en"
+			},
+			{
+				"id": "post-1-vi",
+				"slug": "xay-dung-cho-duong-dai",
+				"status": "published",
+				"data": {
+					"title": "Xây dựng cho đường dài",
+					"excerpt": "Framework sẽ thay đổi. Cơ sở dữ liệu sẽ thay đổi. Điều còn lại là sự mạch lạc trong tư duy của bạn.",
+					"featured_image": {
+						"$media": {
+							"url": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&h=800&fit=crop",
+							"alt": "Mã nguồn hiển thị trên màn hình trong căn phòng tối",
+							"filename": "building-long-term.jpg"
+						}
+					},
+					"content": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Cứ vài năm, cả ngành lại đồng loạt cho rằng mọi cách làm trước đây đều sai và đã có một hướng đi tốt hơn. Framework mới, mô hình mới, công cụ build mới. Vòng xoáy thay đổi không ngừng nghỉ; nếu không cẩn thận, bạn sẽ dành nhiều thời gian để chuyển đổi hệ thống hơn là xây dựng sản phẩm.",
+									"_key": "k1"
+								}
+							],
+							"_key": "k0"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Tôi viết phần mềm đủ lâu để chứng kiến vài chu kỳ như vậy: từ jQuery sang Backbone, Angular, React rồi bất cứ thứ gì tiếp theo. Mỗi lần chuyển đổi đều có vẻ cấp bách vào thời điểm đó. Nhưng nhìn lại, những điều thực sự quan trọng hiếm khi nằm ở framework.",
+									"_key": "k3"
+								}
+							],
+							"_key": "k2"
+						},
+						{
+							"_type": "block",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Điều còn lại",
+									"_key": "k5"
+								}
+							],
+							"_key": "k4"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Mô hình dữ liệu sạch sẽ còn lại. Ranh giới rõ ràng giữa các hệ thống sẽ còn lại. Cách đặt tên tốt sẽ còn lại. Và quyết định giữ mọi thứ đơn giản thay vì cố tỏ ra thông minh — điều đó chắc chắn sẽ còn lại.",
+									"_key": "k7"
+								}
+							],
+							"_key": "k6"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Thứ không còn lại là những đoạn mã được viết để gây ấn tượng, những lớp trừu tượng dành cho vấn đề chưa bao giờ xuất hiện, và kiến trúc được thiết kế theo quan điểm của framework thay vì thực tế của miền nghiệp vụ.",
+									"_key": "k9"
+								}
+							],
+							"_key": "k8"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Những đoạn mã tốt nhất tôi từng viết đều rất “nhàm chán”. Chúng đọc tự nhiên như văn xuôi, làm tốt một việc và không đòi hỏi bằng tiến sĩ về lý thuyết phạm trù mới hiểu được. Còn những đoạn mã tệ nhất thì, ở thời điểm ra đời, lại rất ấn tượng về mặt kỹ thuật.",
+									"_key": "k11"
+								}
+							],
+							"_key": "k10"
+						}
+					]
+				},
+				"bylines": [
+					{
+						"byline": "byline-editorial"
+					},
+					{
+						"byline": "byline-guest",
+						"roleLabel": "Bài viết khách mời"
+					}
+				],
+				"locale": "vi",
+				"translationOf": "post-1",
+				"taxonomies": {
+					"category": [
+						"phat-trien"
+					],
+					"tag": [
+						"quan-diem"
+					]
 				}
 			},
 			{
@@ -496,8 +806,108 @@
 					}
 				],
 				"taxonomies": {
-					"category": ["development"],
-					"tag": ["webdev", "opinion"]
+					"category": [
+						"development"
+					],
+					"tag": [
+						"webdev",
+						"opinion"
+					]
+				},
+				"locale": "en"
+			},
+			{
+				"id": "post-2-vi",
+				"slug": "ly-do-nen-chon-web-tinh",
+				"status": "published",
+				"data": {
+					"title": "Lý do nên chọn web tĩnh",
+					"excerpt": "Trang tĩnh không phải một bước lùi. Đó là kết quả khi bạn thực sự coi trọng hiệu năng và sự đơn giản.",
+					"featured_image": {
+						"$media": {
+							"url": "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1200&h=800&fit=crop",
+							"alt": "Máy tính xách tay và cà phê trên bàn gỗ",
+							"filename": "case-for-static.jpg"
+						}
+					},
+					"content": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Có một nghịch lý thú vị: web khởi đầu ở dạng tĩnh, chuyển sang động, rồi giờ lại nghiêng về tĩnh. Nhưng các trang tĩnh ngày nay không phải những trang HTML viết tay của năm 1998. Chúng được tạo tự động, tối ưu hóa và triển khai trên các mạng biên để phục vụ nội dung chỉ trong vài mili giây.",
+									"_key": "k1"
+								}
+							],
+							"_key": "k0"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Đề xuất kết xuất mọi thứ trên máy chủ từng rất thuyết phục: nội dung động, cá nhân hóa, dữ liệu thời gian thực. Nhưng phần lớn trang web không cần hầu hết những thứ đó trong phần lớn thời gian. Một bài blog không cần được kết xuất lại cho từng yêu cầu. Một trang sản phẩm cũng không thay đổi mỗi giây.",
+									"_key": "k3"
+								}
+							],
+							"_key": "k2"
+						},
+						{
+							"_type": "block",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Lập luận về hiệu năng",
+									"_key": "k5"
+								}
+							],
+							"_key": "k4"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Một tệp tĩnh được phục vụ từ CDN gần như là tốc độ tối đa mà web có thể đạt được. Không có cold start, không truy vấn cơ sở dữ liệu, không chi phí kết xuất phía máy chủ. Thời gian nhận byte đầu tiên về cơ bản chỉ còn là độ trễ mạng tới nút biên gần nhất. Không thể thắng được vật lý.",
+									"_key": "k7"
+								}
+							],
+							"_key": "k6"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Khi thực sự cần hành vi động, bạn có thể bổ sung đúng vào nơi cần thiết. Một “đảo” tương tác giữa biển HTML tĩnh. Bạn có được ưu điểm của cả hai mà không phải luôn gánh chi phí của cả hai.",
+									"_key": "k9"
+								}
+							],
+							"_key": "k8"
+						}
+					]
+				},
+				"bylines": [
+					{
+						"byline": "byline-editorial"
+					}
+				],
+				"locale": "vi",
+				"translationOf": "post-2",
+				"taxonomies": {
+					"category": [
+						"phat-trien"
+					],
+					"tag": [
+						"phat-trien-web",
+						"quan-diem"
+					]
 				}
 			},
 			{
@@ -578,8 +988,101 @@
 					]
 				},
 				"taxonomies": {
-					"category": ["notes"],
-					"tag": ["opinion"]
+					"category": [
+						"notes"
+					],
+					"tag": [
+						"opinion"
+					]
+				},
+				"locale": "en"
+			},
+			{
+				"id": "post-3-vi",
+				"slug": "hoc-hoi-cong-khai",
+				"status": "published",
+				"data": {
+					"title": "Học hỏi công khai",
+					"excerpt": "Viết về điều đang học là cách nhanh nhất để nhận ra những gì bạn chưa thực sự hiểu.",
+					"featured_image": {
+						"$media": {
+							"url": "https://images.unsplash.com/photo-1432821596592-e2c18b78144f?w=1200&h=800&fit=crop",
+							"alt": "Sổ tay và bút đặt trên bàn",
+							"filename": "learning-in-public.jpg"
+						}
+					},
+					"content": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Tôi bắt đầu viết về những điều mình đang học không phải vì có gì mới mẻ để nói, mà vì cứ quên mất những gì đã tìm ra. Các bài blog là ghi chú gửi cho chính tôi trong tương lai; việc công khai chúng bắt nguồn từ sự lười biếng nhiều hơn là lòng can đảm.",
+									"_key": "k1"
+								}
+							],
+							"_key": "k0"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Điều tôi không ngờ tới là chính quá trình viết lại thúc đẩy việc học nhanh đến vậy. Cố gắng giải thích một điều cho người khác mang lại một kiểu sáng rõ rất riêng. Những khoảng trống trong hiểu biết — vốn dễ dàng bị bỏ qua khi kiến thức chỉ nằm trong đầu — bỗng trở nên rõ ràng đến khó chịu khi bạn phải diễn đạt thành câu.",
+									"_key": "k3"
+								}
+							],
+							"_key": "k2"
+						},
+						{
+							"_type": "block",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Nỗi sợ sai",
+									"_key": "k5"
+								}
+							],
+							"_key": "k4"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Rào cản lớn nhất không phải thời gian hay kỹ năng viết, mà là nỗi sợ công bố một điều rồi phát hiện ra nó sai. Nhưng sự thật là: sai công khai là một trong những cách học hiệu quả nhất. Sẽ có người sửa cho bạn, thường là với thiện ý, và bạn sẽ nhớ lời sửa đó mãi.",
+									"_key": "k7"
+								}
+							],
+							"_key": "k6"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Những bài viết giúp tôi nhiều nhất không đến từ các chuyên gia. Chúng được viết bởi những người chỉ đi trước tôi một bước trên cùng con đường, bằng thứ ngôn ngữ chưa bị đánh bóng thành những khái niệm trừu tượng. Kiểu viết ấy có chỗ đứng riêng và giá trị hơn nhiều so với điều đa số vẫn nghĩ.",
+									"_key": "k9"
+								}
+							],
+							"_key": "k8"
+						}
+					]
+				},
+				"locale": "vi",
+				"translationOf": "post-3",
+				"taxonomies": {
+					"category": [
+						"ghi-chep"
+					],
+					"tag": [
+						"quan-diem"
+					]
 				}
 			},
 			{
@@ -660,8 +1163,101 @@
 					]
 				},
 				"taxonomies": {
-					"category": ["development"],
-					"tag": ["tools"]
+					"category": [
+						"development"
+					],
+					"tag": [
+						"tools"
+					]
+				},
+				"locale": "en"
+			},
+			{
+				"id": "post-4-vi",
+				"slug": "cong-cu-nho-tac-dong-lon",
+				"status": "published",
+				"data": {
+					"title": "Công cụ nhỏ, tác động lớn",
+					"excerpt": "Những công cụ tốt nhất cho lập trình viên làm thật tốt một việc rồi lặng lẽ nhường đường. Một lời tri ân dành cho phần mềm có trọng tâm.",
+					"featured_image": {
+						"$media": {
+							"url": "https://images.unsplash.com/photo-1575026615908-666710ae5e47?w=1200&h=800&fit=crop",
+							"alt": "Cờ lê và dụng cụ cầm tay treo trên tường xưởng",
+							"filename": "small-tools.jpg"
+						}
+					},
+					"content": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Có một lớp phần mềm chưa được trân trọng đúng mức. Không phải framework, nền tảng hay IDE, mà là những công cụ nhỏ gọn, sắc bén, giải quyết một vấn đề tốt đến mức bạn không còn phải nghĩ về chúng. Chúng trở nên vô hình — lời khen cao nhất dành cho một công cụ.",
+									"_key": "k1"
+								}
+							],
+							"_key": "k0"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Tôi đang nói đến những công cụ như ripgrep, thứ tìm kiếm mã nguồn nhanh đến mức thay đổi cách tôi nghĩ về việc tìm kiếm. Hay jq, công cụ khiến JSON trở thành một định dạng dữ liệu đúng nghĩa ngay trong terminal. Hoặc curl, thứ đã âm thầm vận hành hệ thống đường ống của Internet suốt nhiều thập kỷ.",
+									"_key": "k3"
+								}
+							],
+							"_key": "k2"
+						},
+						{
+							"_type": "block",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Nhìn lại triết lý Unix",
+									"_key": "k5"
+								}
+							],
+							"_key": "k4"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Làm thật tốt một việc. Lời khuyên này đã cũ đến mức thành sáo ngữ, nhưng những công cụ hiện đại tốt nhất vẫn tuân theo nó. Chúng không cố trở thành nền tảng. Chúng không có hệ sinh thái plugin, ngôn ngữ cấu hình hay trình hướng dẫn khởi động. Chúng làm đúng phần việc của mình và phối hợp với những công cụ khác cũng làm đúng phần việc của chúng.",
+									"_key": "k7"
+								}
+							],
+							"_key": "k6"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Cám dỗ luôn là thêm nhiều hơn: thêm một tính năng, một tùy chọn, một tích hợp. Nhưng mỗi thứ được thêm vào là một quyết định ai đó phải đưa ra, một nhánh mã phải bảo trì, một thứ có thể hỏng. Những công cụ tốt nhất chống lại cám dỗ ấy. Chúng giữ mình nhỏ gọn, và nhờ nhỏ gọn mà luôn đáng tin cậy.",
+									"_key": "k9"
+								}
+							],
+							"_key": "k8"
+						}
+					]
+				},
+				"locale": "vi",
+				"translationOf": "post-4",
+				"taxonomies": {
+					"category": [
+						"phat-trien"
+					],
+					"tag": [
+						"cong-cu"
+					]
 				}
 			},
 			{
@@ -742,8 +1338,101 @@
 					]
 				},
 				"taxonomies": {
-					"category": ["design"],
-					"tag": ["creativity"]
+					"category": [
+						"design"
+					],
+					"tag": [
+						"creativity"
+					]
+				},
+				"locale": "en"
+			},
+			{
+				"id": "post-5-vi",
+				"slug": "thiet-ke-trong-gioi-han",
+				"status": "published",
+				"data": {
+					"title": "Thiết kế trong giới hạn",
+					"excerpt": "Giới hạn không cản trở sáng tạo. Chính chúng tạo nên cấu trúc để sự sáng tạo có thể hình thành.",
+					"featured_image": {
+						"$media": {
+							"url": "https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=1200&h=800&fit=crop",
+							"alt": "Bút chì và dụng cụ thiết kế đặt trên bàn",
+							"filename": "designing-with-constraints.jpg"
+						}
+					},
+					"content": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Đưa cho một nhà thiết kế khung vẽ trống cùng thời gian vô hạn, họ thường chỉ tạo ra một thứ tầm thường. Hãy đưa cho họ một đề bài chặt chẽ, màn hình nhỏ và thời hạn rõ ràng, họ sẽ khiến bạn bất ngờ. Đây không phải nghịch lý — đó là cách sáng tạo thực sự vận hành.",
+									"_key": "k1"
+								}
+							],
+							"_key": "k0"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Giới hạn buộc ta phải quyết định. Khi không thể dùng quá hai kiểu chữ, bạn phải lựa chọn cẩn thận. Khi trang phải tải trong chưa đầy một giây, từng thành phần đều phải chứng minh lý do tồn tại. Khi giao diện phải hoạt động trên màn hình rộng 320px, bạn nhận ra điều gì thực sự thiết yếu.",
+									"_key": "k3"
+								}
+							],
+							"_key": "k2"
+						},
+						{
+							"_type": "block",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Đón nhận khuôn khổ",
+									"_key": "k5"
+								}
+							],
+							"_key": "k4"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Bản thân web là một tập hợp giới hạn. Nội dung HTML tuân theo một dòng chảy. CSS có mô hình hộp. Trình duyệt có kích thước khung nhìn và những khác biệt riêng trong cách kết xuất phông chữ. Bạn có thể chống lại hoặc làm việc cùng các giới hạn ấy; kết quả của hai cách sẽ khác nhau rõ rệt.",
+									"_key": "k7"
+								}
+							],
+							"_key": "k6"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Những thiết kế tôi ngưỡng mộ nhất không có vẻ bị ép qua một framework. Chúng trông như lớn lên tự nhiên từ chính môi trường, thuận theo đặc tính của nó thay vì cưỡng lại. Điều đó chỉ xảy ra khi bạn xem giới hạn là cộng sự sáng tạo chứ không phải kẻ thù.",
+									"_key": "k9"
+								}
+							],
+							"_key": "k8"
+						}
+					]
+				},
+				"locale": "vi",
+				"translationOf": "post-5",
+				"taxonomies": {
+					"category": [
+						"thiet-ke"
+					],
+					"tag": [
+						"sang-tao"
+					]
 				}
 			},
 			{
@@ -824,8 +1513,101 @@
 					]
 				},
 				"taxonomies": {
-					"category": ["development"],
-					"tag": ["creativity"]
+					"category": [
+						"development"
+					],
+					"tag": [
+						"creativity"
+					]
+				},
+				"locale": "en"
+			},
+			{
+				"id": "post-6-vi",
+				"slug": "cuoi-tuan-voi-du-an-ca-nhan",
+				"status": "published",
+				"data": {
+					"title": "Cuối tuần với một dự án cá nhân",
+					"excerpt": "Không bên liên quan, không hạn chót, không tác vụ Jira. Chỉ có bạn và một ý tưởng ngớ ngẩn biết đâu lại thành hình.",
+					"featured_image": {
+						"$media": {
+							"url": "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=1200&h=800&fit=crop",
+							"alt": "Mã nguồn trên màn hình với giao diện nền tối",
+							"filename": "weekend-side-project.jpg"
+						}
+					},
+					"content": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Sáng thứ Bảy. Cà phê đã pha, căn nhà yên tĩnh, và tôi có một ý tưởng cứ đeo bám suốt tuần. Chưa chắc là ý tưởng hay — chỉ là nó không chịu biến mất. Một công cụ nhỏ để làm việc tôi vẫn lặp lại thủ công. Có thể khó đến đâu chứ?",
+									"_key": "k1"
+								}
+							],
+							"_key": "k0"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Đây là kiểu lập trình tuyệt vời nhất. Không tài liệu yêu cầu, không lập kế hoạch sprint, không duyệt pull request. Chỉ có trình soạn thảo văn bản và một vấn đề cần giải quyết. Bạn được tự do đưa ra những quyết định kiến trúc tệ hại, viết lại mọi thứ hai lần và đi theo những ngả rẽ rồi mới biết là ngõ cụt.",
+									"_key": "k3"
+								}
+							],
+							"_key": "k2"
+						},
+						{
+							"_type": "block",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Vì sao dự án cá nhân quan trọng",
+									"_key": "k5"
+								}
+							],
+							"_key": "k4"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Dự án cá nhân là nơi bạn học được những điều công việc hằng ngày không bao giờ dạy. Không phải vì vấn đề khó hơn, mà vì bạn được tự do mạo hiểm. Hãy thử một ngôn ngữ chưa từng dùng. Xây dựng thứ gì đó không cần framework. Triển khai lên một nền tảng bạn mới chỉ đọc qua. Rủi ro bằng không, nên cơ hội học hỏi đạt mức tối đa.",
+									"_key": "k7"
+								}
+							],
+							"_key": "k6"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Đến tối Chủ nhật, sản phẩm đã tạm chạy. Nó còn thô, gần như không xử lý lỗi, và README chỉ có một câu. Nhưng nó giải quyết đúng vấn đề tôi đặt ra, đồng thời giúp tôi học được ba điều mà thứ Sáu vẫn chưa biết. Một cuối tuần không tệ.",
+									"_key": "k9"
+								}
+							],
+							"_key": "k8"
+						}
+					]
+				},
+				"locale": "vi",
+				"translationOf": "post-6",
+				"taxonomies": {
+					"category": [
+						"phat-trien"
+					],
+					"tag": [
+						"sang-tao"
+					]
 				}
 			},
 			{
@@ -906,8 +1688,101 @@
 					]
 				},
 				"taxonomies": {
-					"category": ["notes"],
-					"tag": ["opinion"]
+					"category": [
+						"notes"
+					],
+					"tag": [
+						"opinion"
+					]
+				},
+				"locale": "en"
+			},
+			{
+				"id": "post-7-vi",
+				"slug": "ghi-chep-ve-su-don-gian",
+				"status": "published",
+				"data": {
+					"title": "Ghi chép về sự đơn giản",
+					"excerpt": "Đơn giản không phải là không có phức tạp. Đó là kết quả của việc hiểu vấn đề đủ sâu để giải quyết một cách gọn gàng.",
+					"featured_image": {
+						"$media": {
+							"url": "https://images.unsplash.com/photo-1559051668-e1fa58f25786?w=1200&h=800&fit=crop",
+							"alt": "Họa tiết hình học được cắt trên giấy trắng",
+							"filename": "notes-on-simplicity.jpg"
+						}
+					},
+					"content": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Mọi phần mềm đều khởi đầu đơn giản: vài tệp, mục đích rõ ràng, phạm vi nhỏ. Rồi tính năng được thêm vào, các trường hợp biên được xử lý, và chẳng bao lâu bạn đã đứng trước một thứ cần đến sơ đồ mới hiểu nổi. Điều này không phải tất yếu, nhưng để ngăn nó xảy ra cần có kỷ luật.",
+									"_key": "k1"
+								}
+							],
+							"_key": "k0"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Phần khó của sự đơn giản không nằm ở thiết kế ban đầu, mà ở việc liên tục chống lại sự rắc rối. Mỗi yêu cầu tính năng, mỗi lần sửa lỗi, mỗi đợt tái cấu trúc đều là một cơ hội để thêm phức tạp. Biết nói không là kỹ năng thiết kế quan trọng nhất, đồng thời ít được ghi nhận nhất.",
+									"_key": "k3"
+								}
+							],
+							"_key": "k2"
+						},
+						{
+							"_type": "block",
+							"style": "h2",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Loại bỏ cũng là một tính năng",
+									"_key": "k5"
+								}
+							],
+							"_key": "k4"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Phiên bản tốt nhất của một sản phẩm thường có ít tính năng hơn phiên bản trước. Không phải vì thiếu tính năng, mà vì ai đó đã đủ can đảm loại bỏ những thứ không xứng đáng với chi phí duy trì. Mỗi tính năng đều có cái giá của nó — ở công sức bảo trì, tải nhận thức và sức nặng của giao diện.",
+									"_key": "k7"
+								}
+							],
+							"_key": "k6"
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Đơn giản là một quá trình thực hành, không phải đích đến. Bạn không bao giờ thật sự “đạt tới” sự đơn giản. Bạn chỉ tiếp tục hỏi: điều này có cần thiết không? Có thể rõ ràng hơn không? Liệu có cách giải quyết bằng cách bớt đi thay vì thêm vào không? Câu trả lời là có thường xuyên hơn bạn tưởng.",
+									"_key": "k9"
+								}
+							],
+							"_key": "k8"
+						}
+					]
+				},
+				"locale": "vi",
+				"translationOf": "post-7",
+				"taxonomies": {
+					"category": [
+						"ghi-chep"
+					],
+					"tag": [
+						"quan-diem"
+					]
 				}
 			},
 			{
@@ -931,7 +1806,33 @@
 							"_key": "k0"
 						}
 					]
-				}
+				},
+				"locale": "en"
+			},
+			{
+				"id": "post-draft-vi",
+				"slug": "dang-hoan-thien",
+				"status": "draft",
+				"data": {
+					"title": "Đang hoàn thiện",
+					"excerpt": "Bài viết này vẫn đang được hoàn thiện.",
+					"content": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{
+									"_type": "span",
+									"text": "Đây là bản nháp nên sẽ không xuất hiện trong danh sách bài viết công khai.",
+									"_key": "k1"
+								}
+							],
+							"_key": "k0"
+						}
+					]
+				},
+				"locale": "vi",
+				"translationOf": "post-draft"
 			}
 		]
 	}

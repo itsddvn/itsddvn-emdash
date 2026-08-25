@@ -30,6 +30,18 @@ A clean, minimal blog built with [EmDash](https://github.com/emdash-cms/emdash) 
 | Static pages | `/pages/:slug` |
 | 404 | fallback |
 
+## Localization
+
+Vietnamese is the default locale and uses unprefixed routes such as `/posts/:slug`.
+English uses the same route structure under `/en`, for example
+`/en/posts/:slug`. Content, menus, taxonomies, search, RSS, canonical URLs, and
+`hreflang` alternates resolve independently per locale.
+
+Editors create and publish translation siblings from the EmDash translation
+panel. The admin remains unprefixed at `/_emdash/admin`; do not enable Astro's
+`prefixDefaultLocale` or `prefix-always` routing because injected EmDash admin
+pages require the canonical unprefixed path.
+
 ## Screenshots
 
 | | Desktop | Mobile |

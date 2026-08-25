@@ -3,7 +3,10 @@ export const prerender = false;
 
 import { search } from "emdash";
 import Base from "../layouts/Base.astro";
+import { getMessages, localePath, resolveLocale } from "../utils/i18n";
 
+const locale = resolveLocale(Astro.currentLocale);
+const copy = getMessages(locale);
 const query = Astro.url.searchParams.get("q")?.trim() || "";
 
 // Use the FTS-backed search() API instead of loading every post and
@@ -11,36 +14,32 @@ const query = Astro.url.searchParams.get("q")?.trim() || "";
 // results, and handles tokenization/stemming. Templates that grep all
 // post bodies in JS quickly become unusable past a few hundred posts.
 const { items: results } = query
-	? await search(query, { collections: ["posts"], limit: 30 })
+	? await search(query, { collections: ["posts"], locale, limit: 30 })
 	: { items: [] };
 ---
 
 <Base
-	title={query ? `Search: ${query}` : "Search"}
-	description="Search blog posts"
+	title={query ? `${copy.search}: ${query}` : copy.search}
+	description={copy.searchDescription}
 >
 	<section class="search-page">
-		<h1 class="search-title">Search</h1>
+		<h1 class="search-title">{copy.search}</h1>
 
-		<form method="get" action="/search" class="search-form">
+		<form method="get" action={localePath(locale, "/search")} class="search-form">
 			<input
 				type="search"
 				name="q"
 				value={query}
-				placeholder="Search posts..."
+				placeholder={copy.searchPlaceholder}
 				class="search-input"
 				autofocus
 			/>
-			<button type="submit" class="search-button">Search</button>
+			<button type="submit" class="search-button">{copy.searchButton}</button>
 		</form>
 
 		{
 			query && (
-				<p class="search-summary">
-					{results.length === 0
-						? `No results for "${query}"`
-						: `${results.length} result${results.length === 1 ? "" : "s"} for "${query}"`}
-				</p>
+				<p class="search-summary">{copy.searchSummary(results.length, query)}</p>
 			)
 		}
 
@@ -50,11 +49,11 @@ const { items: results } = query
 					{results.map((result) => (
 						<li class="search-result">
 							<a
-								href={`/posts/${result.slug ?? result.id}`}
+								href={localePath(locale, `/posts/${result.slug ?? result.id}`)}
 								class="result-link"
 							>
 								<h2 class="result-title">
-									{result.title ?? "Untitled"}
+									{result.title ?? copy.untitled}
 								</h2>
 								{result.snippet && (
 									<p class="result-snippet" set:html={result.snippet} />
@@ -66,7 +65,7 @@ const { items: results } = query
 			)
 		}
 
-		{!query && <p class="search-hint">Enter a search term to find posts.</p>}
+		{!query && <p class="search-hint">{copy.searchHint}</p>}
 	</section>
 </Base>
 

@@ -8,15 +8,26 @@ import {
 import Base from "../../layouts/Base.astro";
 import PostCard from "../../components/PostCard.astro";
 import { getReadingTime } from "../../utils/reading-time";
+import { getMessages, getTaxonomyLocalePaths, localePath, resolveLocale } from "../../utils/i18n";
 
+const locale = resolveLocale(Astro.currentLocale);
+const copy = getMessages(locale);
 const slug = decodeSlug(Astro.params.slug);
-const term = slug ? await getTerm("category", slug) : null;
+const term = slug ? await getTerm("category", slug, { locale }) : null;
 
 if (!term) {
-	return Astro.redirect("/404");
+	return Astro.redirect(localePath(locale, "/404"));
 }
+const termLocale = resolveLocale(term.locale);
+const localePaths = await getTaxonomyLocalePaths("category", term, "category");
 
+if (termLocale !== locale) {
+	return Astro.redirect(
+		localePaths[termLocale] ?? localePath(termLocale, `/category/${term.slug}`),
+	);
+}
 const { entries: posts, cacheHint } = await getEmDashCollection("posts", {
+	locale: termLocale,
 	where: { category: term.slug },
 	orderBy: { published_at: "desc" },
 });
@@ -30,6 +41,7 @@ const tagsByEntry = await getTermsForEntries(
 	"posts",
 	posts.map((p) => p.data.id),
 	"tag",
+	{ locale: termLocale },
 );
 const filteredPosts = posts.map((post) => ({
 	post,
@@ -37,20 +49,21 @@ const filteredPosts = posts.map((post) => ({
 }));
 ---
 
-<Base title={`${term.label} posts`} description={`All posts in ${term.label}`}>
+<Base
+	title={copy.categoryPosts(term.label)}
+	description={copy.categoryDescription(term.label)}
+	localePaths={localePaths}
+>
 	<section class="archive-section">
 		<header class="archive-header">
-			<span class="archive-label">Category</span>
+			<span class="archive-label">{copy.categories}</span>
 			<h1 class="archive-title">{term.label}</h1>
-			<p class="archive-count">
-				{filteredPosts.length}
-				{filteredPosts.length === 1 ? "post" : "posts"}
-			</p>
+			<p class="archive-count">{copy.articleCount(filteredPosts.length)}</p>
 		</header>
 
 		{
 			filteredPosts.length === 0 ? (
-				<p class="no-posts">No posts in this category yet.</p>
+				<p class="no-posts">{copy.noCategoryPosts}</p>
 			) : (
 				<div class="posts-grid">
 					{filteredPosts.map(({ post, tags }) => (
@@ -58,10 +71,11 @@ const filteredPosts = posts.map((post) => ({
 							title={post.data.title}
 							excerpt={post.data.excerpt}
 							featuredImage={post.data.featured_image}
-							href={`/posts/${post.id}`}
+							href={localePath(locale, `/posts/${post.id}`)}
 							date={post.data.publishedAt ?? undefined}
 							readingTime={getReadingTime(post.data.content)}
 							tags={tags.map((t) => ({ slug: t.slug, label: t.label }))}
+							locale={locale}
 						/>
 					))}
 				</div>

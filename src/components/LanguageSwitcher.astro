@@ -1,0 +1,77 @@
+---
+import {
+	SUPPORTED_LOCALES,
+	getMessages,
+	getRouteLocalePaths,
+	resolveLocale,
+	type SiteLocale,
+} from "../utils/i18n";
+
+interface Props {
+	paths?: Partial<Record<SiteLocale, string>>;
+}
+
+const { paths } = Astro.props;
+const currentLocale = resolveLocale(Astro.currentLocale);
+const copy = getMessages(currentLocale);
+const fallbackPaths = getRouteLocalePaths(Astro.url.pathname);
+const links = SUPPORTED_LOCALES.map((locale) => ({
+	locale,
+	href: paths?.[locale] ?? `${fallbackPaths[locale]}${Astro.url.search}`,
+}));
+---
+
+<nav class="language-switcher" aria-label={copy.languageLabel}>
+	{
+		links.map(({ locale, href }) => (
+			<a
+				href={href}
+				lang={locale}
+				hreflang={locale}
+				aria-current={locale === currentLocale ? "page" : undefined}
+			>
+				{locale.toUpperCase()}
+			</a>
+		))
+	}
+</nav>
+
+<style>
+	.language-switcher {
+		display: inline-flex;
+		align-items: center;
+		border: 1px solid var(--color-border);
+	}
+
+	a {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 44px;
+		min-height: 44px;
+		padding: 0 var(--spacing-2);
+		color: var(--color-muted);
+		font-size: var(--font-size-xs);
+		font-weight: 700;
+		text-decoration: none;
+		transition:
+			background var(--transition-fast),
+			color var(--transition-fast),
+			transform var(--transition-fast);
+	}
+
+	a + a {
+		border-left: 1px solid var(--color-border);
+	}
+
+	a:hover,
+	a:focus-visible {
+		background: var(--color-bg-subtle);
+		color: var(--color-brand);
+	}
+
+	a[aria-current="page"] {
+		background: var(--color-brand);
+		color: var(--color-on-brand);
+	}
+</style>

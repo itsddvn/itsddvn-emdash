@@ -6,30 +6,33 @@ import {
 	getSeoMeta,
 	decodeSlug,
 	getSiteSettings,
+	getTaxonomyTerms,
 } from "emdash";
 import {
 	Image,
 	PortableText,
-	Comments,
-	CommentForm,
-	WidgetArea,
 } from "emdash/ui";
 import Base from "../../layouts/Base.astro";
 import PostCard from "../../components/PostCard.astro";
+import LocalizedComments from "../../components/LocalizedComments.astro";
 import { getReadingTime } from "../../utils/reading-time";
 import { resolveBlogSiteIdentity } from "../../utils/site-identity";
+import { getMessages, localePath, resolveLocale } from "../../utils/i18n";
 
+const locale = resolveLocale(Astro.currentLocale);
+const copy = getMessages(locale);
 const slug = decodeSlug(Astro.params.slug);
 
 if (!slug) {
-	return Astro.redirect("/404");
+	return Astro.redirect(localePath(locale, "/404"));
 }
 
-const { entry: post, cacheHint } = await getEmDashEntry("posts", slug);
+const { entry: post, cacheHint, fallbackLocale } = await getEmDashEntry("posts", slug, { locale });
 
 if (!post) {
-	return Astro.redirect("/404");
+	return Astro.redirect(localePath(locale, "/404"));
 }
+const resolvedLocale = fallbackLocale ? resolveLocale(fallbackLocale) : locale;
 
 if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
 
@@ -61,7 +64,7 @@ const { siteTitle } = resolveBlogSiteIdentity(await getSiteSettings());
 const seo = getSeoMeta(post, {
 	siteTitle,
 	siteUrl: Astro.url.origin,
-	path: `/posts/${slug}`,
+	path: localePath(resolvedLocale, `/posts/${post.id}`),
 	defaultOgImage: featuredImageUrl,
 });
 
@@ -77,6 +80,7 @@ const tags = post.data.terms?.tag ?? [];
 
 // Fetch a few extra recent posts in case the current post is among them.
 const { entries: recentPosts } = await getEmDashCollection("posts", {
+	locale,
 	orderBy: { published_at: "desc" },
 	limit: 4,
 });
@@ -88,15 +92,17 @@ const otherTagsByEntry = await getTermsForEntries(
 	"posts",
 	otherPosts.map((p) => p.data.id),
 	"tag",
+	{ locale },
 );
 const otherPostsWithTags = otherPosts.map((p) => ({
 	post: p,
 	tags: otherTagsByEntry.get(p.data.id) ?? [],
 	bylines: p.data.bylines ?? [],
 }));
+const categories = await getTaxonomyTerms("category", { locale });
 
 const publishDate =
-	post.data.publishedAt?.toLocaleDateString("en-US", {
+	post.data.publishedAt?.toLocaleDateString(locale === "vi" ? "vi-VN" : "en-US", {
 		year: "numeric",
 		month: "long",
 		day: "numeric",
@@ -134,7 +140,7 @@ const publishDate =
 						bylines.length > 0 && (
 							<div class="meta-block byline-block">
 								<span class="meta-label">
-									{bylines.length === 1 ? "Author" : "Authors"}
+									{bylines.length === 1 ? copy.author : copy.authors}
 								</span>
 								<div class="bylines">
 									{bylines.map((credit) => (
@@ -163,22 +169,22 @@ const publishDate =
 					{
 						publishDate && (
 							<div class="meta-block">
-								<span class="meta-label">Published</span>
+								<span class="meta-label">{copy.published}</span>
 								<time class="meta-value">{publishDate}</time>
 							</div>
 						)
 					}
 					<div class="meta-block">
-						<span class="meta-label">Reading time</span>
-						<span class="meta-value">{readingTime} min</span>
+						<span class="meta-label">{copy.readingTime}</span>
+						<span class="meta-value">{copy.minuteShort(readingTime)}</span>
 					</div>
 					{
 						tags.length > 0 && (
 							<div class="meta-block">
-								<span class="meta-label">Tags</span>
+								<span class="meta-label">{copy.tags}</span>
 								<div class="meta-tags">
 									{tags.map((t) => (
-										<a href={`/tag/${t.slug}`} class="meta-tag">
+										<a href={localePath(locale, `/tag/${t.slug}`)} class="meta-tag">
 											{t.label}
 										</a>
 									))}
@@ -216,8 +222,9 @@ const publishDate =
 								</>
 							)
 						}
-						<span>{readingTime} min read</span>
+						<span>{copy.minuteRead(readingTime)}</span>
 					</div>
+					{fallbackLocale && <p class="fallback-notice">{copy.fallbackNotice}</p>}
 					<h1 class="article-title" {...post.edit.title}>{post.data.title}</h1>
 					{
 						post.data.excerpt && (
@@ -231,22 +238,65 @@ const publishDate =
 				</div>
 
 				<div class="article-comments">
-					<Comments collection="posts" contentId={post.data.id} threaded />
-					<CommentForm collection="posts" contentId={post.data.id} />
+					<LocalizedComments collection="posts" contentId={post.data.id} locale={locale} />
 				</div>
 			</div>
 
 			{/* Right gutter: TOC + Sidebar widgets */}
 			<aside class="article-sidebar">
 				<div class="sidebar-sticky">
-					<nav class="toc" aria-label="Table of contents">
-						<h4 class="toc-title">On this page</h4>
+					<nav class="toc" aria-label={copy.onThisPage}>
+						<h4 class="toc-title">{copy.onThisPage}</h4>
 						<div class="toc-content" id="toc-content">
 							<!-- Populated by JS -->
 						</div>
 					</nav>
 					<div class="sidebar-widgets">
-						<WidgetArea name="sidebar" />
+						<section class="widget">
+							<h4 class="widget__title">{copy.search}</h4>
+							<form class="widget-search" method="get" action={localePath(locale, "/search")}>
+								<label class="sr-only" for="article-sidebar-search">{copy.search}</label>
+								<input
+									id="article-sidebar-search"
+									class="widget-search__input"
+									type="search"
+									name="q"
+									placeholder={copy.searchPlaceholder}
+								/>
+								<button class="widget-search__button" type="submit">{copy.searchButton}</button>
+							</form>
+						</section>
+						{categories.length > 0 && (
+							<section class="widget">
+								<h4 class="widget__title">{copy.categories}</h4>
+								<ul class="widget-categories">
+									{categories.map((category) => (
+										<li>
+											<a
+												class="widget-categories__link"
+												href={localePath(locale, `/category/${category.slug}`)}
+											>
+												{category.label}
+											</a>
+										</li>
+									))}
+								</ul>
+							</section>
+						)}
+						{otherPosts.length > 0 && (
+							<section class="widget">
+								<h4 class="widget__title">{copy.recentPosts}</h4>
+								<ul class="widget-recent-posts">
+									{otherPosts.map((recentPost) => (
+										<li>
+											<a href={localePath(locale, `/posts/${recentPost.id}`)}>
+												{recentPost.data.title}
+											</a>
+										</li>
+									))}
+								</ul>
+							</section>
+						)}
 					</div>
 				</div>
 			</aside>
@@ -257,7 +307,7 @@ const publishDate =
 		otherPostsWithTags.length > 0 && (
 			<section class="more-posts">
 				<div class="more-inner">
-					<h2 class="more-title">Continue reading</h2>
+					<h2 class="more-title">{copy.continueReading}</h2>
 					<div class="more-grid">
 						{otherPostsWithTags.map(
 							({ post: p, tags: postTags, bylines: postBylines }) => (
@@ -265,11 +315,12 @@ const publishDate =
 									title={p.data.title}
 									excerpt={p.data.excerpt}
 									featuredImage={p.data.featured_image}
-									href={`/posts/${p.id}`}
+									href={localePath(locale, `/posts/${p.id}`)}
 									date={p.data.publishedAt ?? undefined}
 									readingTime={getReadingTime(p.data.content)}
 									tags={postTags.map((t) => ({ slug: t.slug, label: t.label }))}
 									bylines={postBylines}
+									locale={locale}
 								/>
 							)
 						)}
@@ -353,17 +404,19 @@ const publishDate =
 
 	/* Hero image - full width within container */
 	.article-hero {
-		margin: var(--spacing-16) var(--spacing-6);
-		border-radius: var(--radius-lg);
+		margin: var(--spacing-8) var(--spacing-6) var(--spacing-16);
 		overflow: hidden;
+		border-top: 4px solid var(--color-brand);
 		background: var(--color-surface);
 	}
 
 	.article-hero img {
 		width: 100%;
 		height: auto;
-		max-height: 500px;
+		max-height: 640px;
+		aspect-ratio: 16 / 7;
 		object-fit: cover;
+		filter: saturate(0.84) contrast(1.04);
 	}
 
 	/* Three-column grid */
@@ -372,10 +425,10 @@ const publishDate =
 		grid-template-columns:
 			var(--meta-col-width) minmax(0, var(--content-width))
 			var(--gutter-width);
-		gap: var(--spacing-10);
 		justify-content: center;
+		gap: var(--spacing-12);
+		margin: var(--spacing-16) 0 var(--spacing-24);
 		padding: 0 var(--spacing-6);
-		margin: var(--spacing-16) 0;
 	}
 
 	/* Left column: Meta */
@@ -386,50 +439,59 @@ const publishDate =
 	.meta-sticky {
 		position: sticky;
 		top: calc(var(--nav-height) + var(--spacing-8));
+		padding-top: var(--spacing-6);
+		border-top: 4px solid var(--color-brand);
 	}
 
 	.meta-block {
-		margin-bottom: var(--spacing-6);
+		margin-bottom: var(--spacing-8);
 	}
 
 	.meta-label {
 		display: block;
-		font-size: var(--font-size-xs);
-		font-weight: 500;
-		text-transform: uppercase;
-		letter-spacing: var(--tracking-wide);
+		margin-bottom: var(--spacing-2);
 		color: var(--color-muted);
-		margin-bottom: var(--spacing-1);
+		font-size: var(--font-size-xs);
+		font-weight: 700;
+		letter-spacing: var(--tracking-wide);
+		text-transform: uppercase;
 	}
 
 	.meta-value {
 		display: block;
-		font-size: var(--font-size-sm);
 		color: var(--color-text-secondary);
+		font-size: var(--font-size-sm);
 	}
 
 	.meta-tags {
 		display: flex;
-		flex-wrap: wrap;
-		gap: var(--spacing-1);
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--spacing-2);
 	}
 
 	.meta-tag {
-		display: inline-block;
-		padding: var(--tag-padding-y) var(--spacing-2);
-		font-size: var(--font-size-xs);
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		min-width: 44px;
 		color: var(--color-text-secondary);
-		background: var(--color-surface);
-		border-radius: var(--radius);
-		text-decoration: none;
+		font-size: var(--font-size-xs);
+		font-weight: 700;
+		text-decoration-color: var(--color-border);
+		text-decoration-line: underline;
+		text-underline-offset: 4px;
 		transition:
 			color var(--transition-fast),
-			background var(--transition-fast);
+			text-decoration-color var(--transition-fast),
+			transform var(--transition-fast);
 	}
 
-	.meta-tag:hover {
-		color: var(--color-text);
-		background: var(--color-border);
+	.meta-tag:hover,
+	.meta-tag:focus-visible {
+		color: var(--color-brand);
+		text-decoration-color: currentColor;
+		transform: translateX(var(--spacing-1));
 	}
 
 	/* Byline styles */
@@ -474,7 +536,9 @@ const publishDate =
 	}
 
 	.article-header {
-		margin-bottom: var(--spacing-10);
+		margin-bottom: var(--spacing-12);
+		padding-bottom: var(--spacing-10);
+		border-bottom: 1px solid var(--color-border);
 	}
 
 	.article-header .article-meta {
@@ -483,34 +547,36 @@ const publishDate =
 		flex-wrap: wrap;
 		column-gap: var(--spacing-3);
 		row-gap: var(--spacing-1);
-		font-size: var(--font-size-sm);
-		color: var(--color-muted);
 		margin-bottom: var(--spacing-4);
+		color: var(--color-muted);
+		font-size: var(--font-size-sm);
 	}
 
 	.article-meta-byline {
-		font-weight: 500;
 		color: var(--color-text-secondary);
+		font-weight: 600;
 	}
 
 	.article-title {
-		font-size: clamp(2rem, 5vw, var(--font-size-5xl));
+		max-width: 14ch;
+		margin-bottom: var(--spacing-6);
+		font-size: clamp(3rem, 6vw, 5.5rem);
 		font-weight: var(--font-weight-display);
 		line-height: var(--leading-tight);
 		letter-spacing: var(--tracking-tight);
-		margin-bottom: var(--spacing-4);
 	}
 
 	.article-excerpt {
-		font-size: var(--font-size-xl);
-		line-height: var(--leading-relaxed);
+		max-width: 48ch;
 		color: var(--color-text-secondary);
+		font-size: var(--font-size-2xl);
+		line-height: var(--leading-relaxed);
 	}
 
 	/* Article content typography */
 	.article-content {
 		font-size: var(--font-size-lg);
-		line-height: var(--leading-relaxed);
+		line-height: 1.75;
 	}
 
 	.article-content :global(p) {
@@ -518,47 +584,47 @@ const publishDate =
 	}
 
 	.article-content :global(h2) {
-		font-size: var(--font-size-2xl);
 		margin-top: 2.5em;
 		margin-bottom: 0.75em;
+		font-size: var(--font-size-3xl);
 		scroll-margin-top: calc(var(--nav-height) + var(--spacing-4));
 	}
 
 	.article-content :global(h3) {
-		font-size: var(--font-size-xl);
 		margin-top: 2em;
 		margin-bottom: 0.5em;
+		font-size: var(--font-size-2xl);
 		scroll-margin-top: calc(var(--nav-height) + var(--spacing-4));
 	}
 
 	.article-content :global(blockquote) {
-		margin: 2em 0;
-		padding: var(--spacing-4) var(--spacing-6);
-		border-left: 3px solid var(--color-border);
-		background: var(--color-bg-subtle);
-		border-radius: 0 var(--radius) var(--radius) 0;
-		color: var(--color-text-secondary);
-		font-style: italic;
+		margin: 2.5em 0;
+		padding: var(--spacing-8) 0;
+		border-top: 1px solid var(--color-brand);
+		border-bottom: 1px solid var(--color-brand);
+		color: var(--color-earth);
+		font-family: var(--font-heading);
+		font-size: var(--font-size-2xl);
+		font-style: normal;
+		line-height: var(--leading-snug);
 	}
 
 	.article-content :global(pre) {
 		margin: 2em 0;
-		padding: var(--spacing-5);
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-lg);
+		padding: var(--spacing-6);
 		overflow-x: auto;
+		border: 1px solid var(--color-border);
+		background: var(--color-bg-subtle);
 		font-family: var(--font-mono);
 		font-size: var(--font-size-sm);
 		line-height: 1.6;
 	}
 
 	.article-content :global(code) {
+		padding: 0.2em 0.4em;
+		background: var(--color-bg-subtle);
 		font-family: var(--font-mono);
 		font-size: 0.9em;
-		background: var(--color-surface);
-		padding: 0.2em 0.4em;
-		border-radius: var(--radius);
 	}
 
 	.article-content :global(pre code) {
@@ -577,8 +643,8 @@ const publishDate =
 	}
 
 	.article-content :global(img) {
-		margin: 2em 0;
-		border-radius: var(--radius-lg);
+		margin: 2.5em 0;
+		border-top: 4px solid var(--color-brand);
 	}
 
 	.article-content :global(hr) {
@@ -589,12 +655,15 @@ const publishDate =
 
 	.article-content :global(a) {
 		color: var(--color-brand);
-		text-decoration: underline;
-		text-underline-offset: 3px;
+		text-decoration-color: currentColor;
+		text-decoration-line: underline;
 		text-decoration-thickness: 1px;
+		text-underline-offset: 4px;
 	}
 
-	.article-content :global(a:hover) {
+	.article-content :global(a:hover),
+	.article-content :global(a:focus-visible) {
+		color: var(--color-brand-hover);
 		text-decoration-thickness: 2px;
 	}
 
@@ -610,27 +679,29 @@ const publishDate =
 
 	.toc {
 		margin-bottom: var(--spacing-8);
+		padding-top: var(--spacing-6);
 		padding-bottom: var(--spacing-6);
-		border-bottom: 1px solid var(--color-border-subtle);
+		border-top: 4px solid var(--color-brand);
+		border-bottom: 1px solid var(--color-border);
 	}
 
 	.toc-title {
-		font-size: var(--font-size-xs);
-		font-weight: 500;
-		text-transform: uppercase;
-		letter-spacing: var(--tracking-wide);
+		margin-bottom: var(--spacing-4);
 		color: var(--color-muted);
-		margin-bottom: var(--spacing-3);
+		font-size: var(--font-size-xs);
+		font-weight: 700;
+		letter-spacing: var(--tracking-wide);
+		text-transform: uppercase;
 	}
 
 	.toc-content :global(.toc-list) {
-		list-style: none;
-		padding: 0;
 		margin: 0;
+		padding: 0;
+		list-style: none;
 	}
 
 	.toc-content :global(.toc-item) {
-		margin-bottom: var(--spacing-1);
+		margin-bottom: var(--spacing-2);
 	}
 
 	.toc-content :global(.toc-item--nested) {
@@ -639,17 +710,22 @@ const publishDate =
 
 	.toc-content :global(.toc-link) {
 		display: block;
-		font-size: var(--font-size-sm);
+		min-height: 44px;
+		padding: var(--spacing-2) 0;
 		color: var(--color-muted);
-		text-decoration: none;
-		padding: var(--spacing-1) 0;
-		transition: color var(--transition-fast);
+		font-size: var(--font-size-sm);
 		line-height: var(--leading-snug);
+		text-decoration: none;
+		transition:
+			color var(--transition-fast),
+			transform var(--transition-fast);
 	}
 
 	.toc-content :global(.toc-link:hover),
+	.toc-content :global(.toc-link:focus-visible),
 	.toc-content :global(.toc-link.active) {
-		color: var(--color-text);
+		color: var(--color-brand);
+		transform: translateX(var(--spacing-1));
 	}
 
 	/* Sidebar widgets */
@@ -885,6 +961,8 @@ const publishDate =
 		background: var(--color-surface) !important;
 		border-color: var(--color-border) !important;
 		color: var(--color-text) !important;
+		min-height: 44px;
+		font-size: 1rem !important;
 	}
 
 	.article-comments :global(.ec-comment-user-info) {
@@ -897,11 +975,11 @@ const publishDate =
 		color: var(--color-on-brand) !important;
 	}
 
-	/* More posts section */
 	.more-posts {
-		background: var(--color-bg-subtle);
-		padding: var(--spacing-16) 0;
-		margin-top: var(--spacing-16);
+		margin-top: var(--spacing-24);
+		padding: var(--spacing-20) 0 var(--spacing-24);
+		border-top: 1px solid var(--color-border);
+		background: var(--color-bg);
 	}
 
 	.more-inner {
@@ -911,18 +989,18 @@ const publishDate =
 	}
 
 	.more-title {
-		font-size: var(--font-size-2xl);
-		font-weight: var(--font-weight-heading);
 		margin-bottom: var(--spacing-10);
+		font-size: var(--font-size-4xl);
+		font-weight: var(--font-weight-heading);
+		letter-spacing: var(--tracking-tight);
 	}
 
 	.more-grid {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: 1.4fr 1fr 1fr;
 		gap: var(--spacing-8);
 	}
 
-	/* Responsive */
 	@media (max-width: 1100px) {
 		.article-grid {
 			grid-template-columns: minmax(0, var(--content-width));
@@ -941,22 +1019,30 @@ const publishDate =
 
 	@media (max-width: 900px) {
 		.article-hero {
-			margin: var(--spacing-4) var(--spacing-4) var(--spacing-8);
-			border-radius: var(--radius);
+			margin: var(--spacing-4) var(--spacing-4) var(--spacing-10);
+		}
+
+		.article-hero img {
+			aspect-ratio: 16 / 9;
 		}
 
 		.article-grid {
+			margin-top: var(--spacing-10);
 			padding: 0 var(--spacing-4);
 		}
 
 		.more-grid {
-			grid-template-columns: repeat(2, 1fr);
+			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 	}
 
 	@media (max-width: 600px) {
 		.article-title {
-			font-size: var(--font-size-3xl);
+			font-size: clamp(3rem, 15vw, 4rem);
+		}
+
+		.article-excerpt {
+			font-size: var(--font-size-xl);
 		}
 
 		.more-grid {
