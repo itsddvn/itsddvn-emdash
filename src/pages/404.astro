@@ -7,31 +7,9 @@ const copy = getMessages(locale);
 ---
 
 <Base title={copy.pageNotFound}>
-	<div class="not-found">
-		<h1>404</h1>
-		<p>{copy.pageNotFoundBody}</p>
-		<a href={localePath(locale, "/")}>{copy.returnHome}</a>
+	<div class="ui-page ui-page--reading ui-empty-state">
+		<h1 class="ui-display">404</h1>
+		<p class="ui-lead">{copy.pageNotFoundBody}</p>
+		<a class="ui-button ui-button--secondary" href={localePath(locale, "/")}>{copy.returnHome}</a>
 	</div>
 </Base>
-
-<style>
-	.not-found {
-		text-align: center;
-		padding: var(--spacing-24) var(--spacing-6);
-	}
-
-	.not-found h1 {
-		font-size: var(--font-size-5xl);
-		margin-bottom: var(--spacing-2);
-		color: var(--color-border);
-	}
-
-	.not-found p {
-		color: var(--color-muted);
-		margin-bottom: var(--spacing-6);
-	}
-
-	.not-found a {
-		color: var(--color-text);
-	}
-</style>

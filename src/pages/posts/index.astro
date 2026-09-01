@@ -2,7 +2,7 @@
 import { getEmDashCollection, getTermsForEntries } from "emdash";
 import Base from "../../layouts/Base.astro";
 import { getReadingTime } from "../../utils/reading-time";
-import { getMessages, localePath, resolveLocale } from "../../utils/i18n";
+import { entrySlugForLocale, getMessages, localePath, resolveLocale } from "../../utils/i18n";
 
 const locale = resolveLocale(Astro.currentLocale);
 const copy = getMessages(locale);
@@ -40,21 +40,21 @@ const formatDate = (date: Date) =>
 ---
 
 <Base title={copy.allPosts} description={copy.searchDescription}>
-	<div class="posts-page">
-		<header class="page-header">
-			<h1 class="page-title">{copy.allPosts}</h1>
-			<p class="page-description">{copy.articleCount(posts.length)}</p>
+	<div class="posts-page ui-page">
+		<header class="page-header ui-page-header">
+			<h1 class="page-title ui-page-title">{copy.allPosts}</h1>
+			<p class="page-description ui-meta">{copy.articleCount(posts.length)}</p>
 		</header>
 
 		{
 			posts.length === 0 ? (
-				<p class="empty">{copy.noPosts}</p>
+				<p class="empty ui-empty">{copy.noPosts}</p>
 			) : (
 				<div class="posts-list">
 					{postsWithTags.map(({ post, tags, bylines }) => (
 						<article class="post-item">
-							<a href={localePath(locale, `/posts/${post.id}`)} class="post-link">
-								<div class="post-meta">
+							<a href={localePath(locale, `/posts/${entrySlugForLocale(post.id, locale)}`)} class="post-link">
+								<div class="post-meta ui-meta">
 									{bylines.length > 0 && (
 										<>
 											<div class="post-bylines">
@@ -88,9 +88,9 @@ const formatDate = (date: Date) =>
 									{post.data.publishedAt && <span class="meta-dot" />}
 									<span>{copy.minuteRead(getReadingTime(post.data.content))}</span>
 								</div>
-								<h2 class="post-title">{post.data.title}</h2>
+								<h2 class="post-title ui-section-title">{post.data.title}</h2>
 								{post.data.excerpt && (
-									<p class="post-excerpt">{post.data.excerpt}</p>
+									<p class="post-excerpt ui-lead">{post.data.excerpt}</p>
 								)}
 							</a>
 							{tags.length > 0 && (
@@ -111,33 +111,6 @@ const formatDate = (date: Date) =>
 </Base>
 
 <style>
-	.posts-page {
-		max-width: var(--wide-width);
-		margin: 0 auto;
-		padding: var(--spacing-12) var(--spacing-6) var(--spacing-24);
-	}
-
-	.page-header {
-		margin-bottom: var(--spacing-16);
-		padding: var(--spacing-12) 0 var(--spacing-16);
-		border-bottom: 1px solid var(--color-border);
-	}
-
-	.page-title {
-		max-width: 12ch;
-		margin-bottom: var(--spacing-4);
-		font-size: clamp(4rem, 9vw, 6rem);
-		font-weight: var(--font-weight-display);
-		line-height: var(--leading-tight);
-		letter-spacing: var(--tracking-tight);
-		text-transform: uppercase;
-	}
-
-	.page-description,
-	.empty {
-		color: var(--color-muted);
-		font-size: var(--font-size-lg);
-	}
 
 	.posts-list {
 		border-top: 1px solid var(--color-border);
@@ -166,8 +139,6 @@ const formatDate = (date: Date) =>
 		align-items: flex-start;
 		flex-direction: column;
 		gap: var(--spacing-2);
-		color: var(--color-muted);
-		font-size: var(--font-size-sm);
 	}
 
 	.post-meta .meta-dot {
@@ -202,17 +173,13 @@ const formatDate = (date: Date) =>
 	.byline-sep,
 	.byline-more {
 		color: var(--color-muted);
-		font-size: var(--font-size-xs);
+		font-size: var(--type-label-size);
 	}
 
 	.post-title {
 		grid-column: 2;
 		max-width: 22ch;
 		margin-bottom: var(--spacing-3);
-		font-size: clamp(2rem, 3vw, 3rem);
-		font-weight: var(--font-weight-heading);
-		line-height: var(--leading-tight);
-		letter-spacing: var(--tracking-snug);
 		transition:
 			color var(--transition-fast),
 			transform var(--transition-fast);
@@ -221,9 +188,6 @@ const formatDate = (date: Date) =>
 	.post-excerpt {
 		grid-column: 2;
 		max-width: 58ch;
-		color: var(--color-text-secondary);
-		font-size: var(--font-size-lg);
-		line-height: var(--leading-relaxed);
 	}
 
 	.post-link:hover .post-title,
@@ -245,7 +209,7 @@ const formatDate = (date: Date) =>
 		min-height: 44px;
 		min-width: 44px;
 		color: var(--color-text-secondary);
-		font-size: var(--font-size-xs);
+		font-size: var(--type-label-size);
 		font-weight: 700;
 		text-decoration-color: var(--color-border);
 		text-decoration-line: underline;
@@ -264,13 +228,6 @@ const formatDate = (date: Date) =>
 	}
 
 	@media (max-width: 900px) {
-		.posts-page {
-			padding: var(--spacing-8) var(--spacing-4) var(--spacing-16);
-		}
-
-		.page-header {
-			padding: var(--spacing-8) 0 var(--spacing-12);
-		}
 
 		.post-item {
 			grid-template-columns: 1fr;
@@ -288,11 +245,8 @@ const formatDate = (date: Date) =>
 		}
 	}
 
-	@media (max-width: 600px) {
-		.page-title {
-			font-size: clamp(3.5rem, 18vw, 5rem);
-		}
 
+	@media (max-width: 600px) {
 		.post-item {
 			padding: var(--spacing-8) 0;
 		}
@@ -315,8 +269,5 @@ const formatDate = (date: Date) =>
 			grid-column: 1;
 		}
 
-		.post-title {
-			font-size: var(--font-size-3xl);
-		}
 	}
 </style>

@@ -17,7 +17,7 @@ import PostCard from "../../components/PostCard.astro";
 import LocalizedComments from "../../components/LocalizedComments.astro";
 import { getReadingTime } from "../../utils/reading-time";
 import { resolveBlogSiteIdentity } from "../../utils/site-identity";
-import { getMessages, localePath, resolveLocale } from "../../utils/i18n";
+import { entrySlugForLocale, getMessages, localePath, resolveLocale } from "../../utils/i18n";
 
 const locale = resolveLocale(Astro.currentLocale);
 const copy = getMessages(locale);
@@ -226,15 +226,15 @@ const publishDate =
 						<span>{copy.minuteRead(readingTime)}</span>
 					</div>
 					{fallbackLocale && <p class="fallback-notice">{copy.fallbackNotice}</p>}
-					<h1 class="article-title" {...post.edit.title}>{post.data.title}</h1>
+					<h1 class="article-title ui-page-title" {...post.edit.title}>{post.data.title}</h1>
 					{
 						post.data.excerpt && (
-							<p class="article-excerpt" {...post.edit.excerpt}>{post.data.excerpt}</p>
+							<p class="article-excerpt ui-lead" {...post.edit.excerpt}>{post.data.excerpt}</p>
 						)
 					}
 				</header>
 
-				<div class="article-content">
+				<div class="article-content ui-prose">
 					<PortableText value={post.data.content} />
 				</div>
 
@@ -259,7 +259,7 @@ const publishDate =
 								<label class="sr-only" for="article-sidebar-search">{copy.search}</label>
 								<input
 									id="article-sidebar-search"
-									class="widget-search__input"
+									class="widget-search__input ui-input"
 									type="search"
 									name="q"
 									placeholder={copy.searchPlaceholder}
@@ -290,7 +290,7 @@ const publishDate =
 								<ul class="widget-recent-posts">
 									{otherPosts.map((recentPost) => (
 										<li>
-											<a href={localePath(locale, `/posts/${recentPost.id}`)}>
+											<a href={localePath(locale, `/posts/${entrySlugForLocale(recentPost.id, locale)}`)}>
 												{recentPost.data.title}
 											</a>
 										</li>
@@ -316,7 +316,7 @@ const publishDate =
 									title={p.data.title}
 									excerpt={p.data.excerpt}
 									featuredImage={p.data.featured_image}
-									href={localePath(locale, `/posts/${p.id}`)}
+									href={localePath(locale, `/posts/${entrySlugForLocale(p.id, locale)}`)}
 									date={p.data.publishedAt ?? undefined}
 									readingTime={getReadingTime(p.data.content)}
 									tags={postTags.map((t) => ({ slug: t.slug, label: t.label }))}
@@ -452,7 +452,7 @@ const publishDate =
 		display: block;
 		margin-bottom: var(--spacing-2);
 		color: var(--color-muted);
-		font-size: var(--font-size-xs);
+		font-size: var(--type-label-size);
 		font-weight: 700;
 		letter-spacing: var(--tracking-wide);
 		text-transform: uppercase;
@@ -461,7 +461,7 @@ const publishDate =
 	.meta-value {
 		display: block;
 		color: var(--color-text-secondary);
-		font-size: var(--font-size-sm);
+		font-size: var(--type-meta-size);
 	}
 
 	.meta-tags {
@@ -477,7 +477,7 @@ const publishDate =
 		min-height: 44px;
 		min-width: 44px;
 		color: var(--color-text-secondary);
-		font-size: var(--font-size-xs);
+		font-size: var(--type-label-size);
 		font-weight: 700;
 		text-decoration-color: var(--color-border);
 		text-decoration-line: underline;
@@ -521,13 +521,13 @@ const publishDate =
 	}
 
 	.byline-name {
-		font-size: var(--font-size-sm);
+		font-size: var(--type-meta-size);
 		font-weight: 500;
 		color: var(--color-text);
 	}
 
 	.byline-role {
-		font-size: var(--font-size-xs);
+		font-size: var(--type-label-size);
 		color: var(--color-muted);
 	}
 
@@ -550,7 +550,7 @@ const publishDate =
 		row-gap: var(--spacing-1);
 		margin-bottom: var(--spacing-4);
 		color: var(--color-muted);
-		font-size: var(--font-size-sm);
+		font-size: var(--type-meta-size);
 	}
 
 	.article-meta-byline {
@@ -559,89 +559,14 @@ const publishDate =
 	}
 
 	.article-title {
-		max-width: 14ch;
+		max-width: 18ch;
 		margin-bottom: var(--spacing-6);
-		font-size: clamp(3rem, 6vw, 5.5rem);
-		font-weight: var(--font-weight-display);
-		line-height: var(--leading-tight);
-		letter-spacing: var(--tracking-tight);
 	}
 
 	.article-excerpt {
 		max-width: 48ch;
-		color: var(--color-text-secondary);
-		font-size: var(--font-size-2xl);
-		line-height: var(--leading-relaxed);
 	}
 
-	/* Article content typography */
-	.article-content {
-		font-size: var(--font-size-lg);
-		line-height: 1.75;
-	}
-
-	.article-content :global(p) {
-		margin-bottom: 1.5em;
-	}
-
-	.article-content :global(h2) {
-		margin-top: 2.5em;
-		margin-bottom: 0.75em;
-		font-size: var(--font-size-3xl);
-		scroll-margin-top: calc(var(--nav-height) + var(--spacing-4));
-	}
-
-	.article-content :global(h3) {
-		margin-top: 2em;
-		margin-bottom: 0.5em;
-		font-size: var(--font-size-2xl);
-		scroll-margin-top: calc(var(--nav-height) + var(--spacing-4));
-	}
-
-	.article-content :global(blockquote) {
-		margin: 2.5em 0;
-		padding: var(--spacing-8) 0;
-		border-top: 1px solid var(--color-brand);
-		border-bottom: 1px solid var(--color-brand);
-		color: var(--color-earth);
-		font-family: var(--font-heading);
-		font-size: var(--font-size-2xl);
-		font-style: normal;
-		line-height: var(--leading-snug);
-	}
-
-	.article-content :global(pre) {
-		margin: 2em 0;
-		padding: var(--spacing-6);
-		overflow-x: auto;
-		border: 1px solid var(--color-border);
-		background: var(--color-bg-subtle);
-		font-family: var(--font-mono);
-		font-size: var(--font-size-sm);
-		line-height: 1.6;
-	}
-
-	.article-content :global(code) {
-		padding: 0.2em 0.4em;
-		background: var(--color-bg-subtle);
-		font-family: var(--font-mono);
-		font-size: 0.9em;
-	}
-
-	.article-content :global(pre code) {
-		background: none;
-		padding: 0;
-	}
-
-	.article-content :global(ul),
-	.article-content :global(ol) {
-		margin-bottom: 1.5em;
-		padding-left: 1.5em;
-	}
-
-	.article-content :global(li) {
-		margin-bottom: 0.5em;
-	}
 
 	.article-content :global(img) {
 		margin: 2.5em 0;
@@ -689,7 +614,7 @@ const publishDate =
 	.toc-title {
 		margin-bottom: var(--spacing-4);
 		color: var(--color-muted);
-		font-size: var(--font-size-xs);
+		font-size: var(--type-label-size);
 		font-weight: 700;
 		letter-spacing: var(--tracking-wide);
 		text-transform: uppercase;
@@ -714,7 +639,7 @@ const publishDate =
 		min-height: 44px;
 		padding: var(--spacing-2) 0;
 		color: var(--color-muted);
-		font-size: var(--font-size-sm);
+		font-size: var(--type-meta-size);
 		line-height: var(--leading-snug);
 		text-decoration: none;
 		transition:
@@ -737,11 +662,11 @@ const publishDate =
 	}
 
 	.sidebar-widgets :global(.widget) {
-		font-size: var(--font-size-sm);
+		font-size: var(--type-meta-size);
 	}
 
 	.sidebar-widgets :global(.widget__title) {
-		font-size: var(--font-size-xs);
+		font-size: var(--type-label-size);
 		font-weight: 500;
 		text-transform: uppercase;
 		letter-spacing: var(--tracking-wide);
@@ -761,30 +686,11 @@ const publishDate =
 		gap: var(--spacing-2);
 	}
 
-	.sidebar-widgets :global(.widget-search__input) {
-		width: 100%;
-		padding: var(--spacing-2) var(--spacing-3);
-		font-family: var(--font-body);
-		font-size: var(--font-size-sm);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius);
-		background: var(--color-bg);
-		color: var(--color-text);
-		transition:
-			border-color var(--transition-fast),
-			box-shadow var(--transition-fast);
-	}
 
 	.sidebar-widgets :global(.widget-search__input)::placeholder {
 		color: var(--color-muted);
 	}
 
-	.sidebar-widgets :global(.widget-search__input):focus,
-	.sidebar-widgets :global(.widget-search__input):focus-visible {
-		outline: none;
-		border-color: var(--color-brand);
-		box-shadow: 0 0 0 3px var(--color-brand-ring);
-	}
 
 	.sidebar-widgets :global(.widget-search__button) {
 		display: none;
@@ -820,7 +726,7 @@ const publishDate =
 	}
 
 	.sidebar-widgets :global(.widget-categories__count) {
-		font-size: var(--font-size-xs);
+		font-size: var(--type-label-size);
 		color: var(--color-muted);
 		background: var(--color-surface);
 		padding: var(--tag-padding-y) var(--spacing-2);
@@ -844,7 +750,7 @@ const publishDate =
 	.sidebar-widgets :global(.widget-tags__link) {
 		display: inline-block;
 		padding: var(--tag-padding-y) var(--spacing-2);
-		font-size: var(--font-size-xs);
+		font-size: var(--type-label-size);
 		color: var(--color-text-secondary);
 		background: var(--color-surface);
 		border-radius: var(--radius);
@@ -920,7 +826,7 @@ const publishDate =
 	}
 
 	.sidebar-widgets :global(.widget-archives__count) {
-		font-size: var(--font-size-xs);
+		font-size: var(--type-label-size);
 		color: var(--color-muted);
 		background: var(--color-surface);
 		padding: var(--tag-padding-y) var(--spacing-2);
@@ -939,7 +845,7 @@ const publishDate =
 	}
 
 	.article-comments :global(.ec-comments-heading) {
-		font-size: var(--font-size-2xl);
+		font-size: var(--type-card-title-size);
 		font-weight: var(--font-weight-heading);
 		margin-bottom: var(--spacing-8);
 	}
@@ -963,7 +869,7 @@ const publishDate =
 		border-color: var(--color-border) !important;
 		color: var(--color-text) !important;
 		min-height: 44px;
-		font-size: 1rem !important;
+		font-size: var(--type-body-size) !important;
 	}
 
 	.article-comments :global(.ec-comment-user-info) {
@@ -991,9 +897,9 @@ const publishDate =
 
 	.more-title {
 		margin-bottom: var(--spacing-10);
-		font-size: var(--font-size-4xl);
+		font-size: var(--type-section-title-size);
 		font-weight: var(--font-weight-heading);
-		letter-spacing: var(--tracking-tight);
+		letter-spacing: var(--tracking-snug);
 	}
 
 	.more-grid {
@@ -1002,14 +908,13 @@ const publishDate =
 		gap: var(--spacing-8);
 	}
 
-	@media (max-width: 1100px) {
+	@media (max-width: 980px) {
 		.article-grid {
-			grid-template-columns: minmax(0, var(--content-width));
-			gap: 0;
+			grid-template-columns: minmax(0, var(--content-width)) var(--gutter-width);
+			gap: var(--spacing-8);
 		}
 
-		.article-meta-col,
-		.article-sidebar {
+		.article-meta-col {
 			display: none;
 		}
 
@@ -1018,7 +923,7 @@ const publishDate =
 		}
 	}
 
-	@media (max-width: 900px) {
+	@media (max-width: 860px) {
 		.article-hero {
 			margin: var(--spacing-4) var(--spacing-4) var(--spacing-10);
 		}
@@ -1028,8 +933,19 @@ const publishDate =
 		}
 
 		.article-grid {
+			grid-template-columns: minmax(0, var(--content-width));
 			margin-top: var(--spacing-10);
 			padding: 0 var(--spacing-4);
+		}
+
+		.article-sidebar {
+			grid-column: 1;
+		}
+
+		.sidebar-sticky {
+			position: static;
+			display: grid;
+			grid-template-columns: minmax(0, 1fr);
 		}
 
 		.more-grid {
@@ -1038,13 +954,6 @@ const publishDate =
 	}
 
 	@media (max-width: 600px) {
-		.article-title {
-			font-size: clamp(3rem, 15vw, 4rem);
-		}
-
-		.article-excerpt {
-			font-size: var(--font-size-xl);
-		}
 
 		.more-grid {
 			grid-template-columns: 1fr;

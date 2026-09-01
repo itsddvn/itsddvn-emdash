@@ -4,6 +4,9 @@
 	"main": "./src/worker.ts",
 	"compatibility_date": "2026-02-24",
 	"compatibility_flags": ["nodejs_compat"],
+	"cache": {
+		"enabled": true,
+	},
 	"d1_databases": [
 		{
 			"binding": "DB",
@@ -14,6 +17,10 @@
 		{
 			"binding": "SESSION",
 			"id": "0d9109b8059e42229c0bb253eb848e0d",
+		},
+		{
+			"binding": "CACHE",
+			"id": "9446e4b3657d494bb59230ef3295eab6"
 		},
 	],
 	"r2_buckets": [

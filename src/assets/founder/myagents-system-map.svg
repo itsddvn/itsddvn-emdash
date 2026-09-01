@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480" role="img" aria-labelledby="title desc">
+  <title id="title">Sơ đồ hệ sinh thái MyAgents</title>
+  <desc id="desc">MyAgents nằm ở trung tâm, kết nối năm thành phần sản phẩm, đặt lịch, thanh toán, vận hành và phản hồi.</desc>
+  <style>
+    .frame { fill: oklch(0.19 0.025 48); stroke: oklch(0.32 0.035 48); }
+    .orbit { fill: none; stroke: oklch(0.42 0.055 48); stroke-width: 1.5; }
+    .connector { fill: none; stroke: oklch(0.46 0.06 48); stroke-width: 1.5; }
+    .satellite { fill: oklch(0.18 0.022 48); stroke: oklch(0.38 0.05 48); stroke-width: 1.5; }
+    .core { fill: oklch(0.22 0.045 48); stroke: oklch(0.69 0.19 47); stroke-width: 2; }
+    .core-ring { fill: none; stroke: oklch(0.69 0.19 47); stroke-width: 1.5; transform-box: fill-box; transform-origin: center; animation: ring 3.2s ease-in-out infinite; }
+    .signal { fill: oklch(0.74 0.19 53); offset-path: path("M112 240A248 154 0 1 0 608 240A248 154 0 1 0 112 240"); offset-rotate: 0deg; animation: signal-orbit 8s linear infinite; }
+    .dot { fill: oklch(0.69 0.19 47); }
+    .title { fill: oklch(0.96 0.012 75); font: 700 28px system-ui, sans-serif; text-anchor: middle; }
+    .label { fill: oklch(0.82 0.022 70); font: 600 16px system-ui, sans-serif; text-anchor: middle; }
+    @keyframes ring { 0%, 100% { opacity: .28; transform: scale(.96); } 50% { opacity: .78; transform: scale(1.04); } }
+    @keyframes signal-orbit { to { offset-distance: 100%; } }
+    @media (prefers-reduced-motion: reduce) { .core-ring { animation: none; opacity: .5; } .signal { display: none; animation: none; } }
+  </style>
+  <rect class="frame" x="1" y="1" width="718" height="478" rx="24"/>
+  <ellipse id="orbit" class="orbit" cx="360" cy="240" rx="248" ry="154"/>
+  <path class="connector" d="M360 180V104M425 212L546 154M425 268L546 326M295 268L174 326M295 212L174 154"/>
+
+  <g transform="translate(360 240)">
+    <polygon class="core-ring" points="0,-82 71,-41 71,41 0,82 -71,41 -71,-41"/>
+    <polygon class="core" points="0,-68 59,-34 59,34 0,68 -59,34 -59,-34"/>
+    <circle class="dot" cy="-18" r="7"/>
+    <text class="title" y="26">MyAgents</text>
+  </g>
+
+  <g transform="translate(360 82)">
+    <rect class="satellite" x="-78" y="-26" width="156" height="52" rx="26"/>
+    <circle class="dot" cx="-48" r="5"/>
+    <text class="label" x="14" y="6">Sản phẩm</text>
+  </g>
+  <g transform="translate(566 152)">
+    <rect class="satellite" x="-88" y="-26" width="176" height="52" rx="26"/>
+    <circle class="dot" cx="-56" r="5"/>
+    <text class="label" x="14" y="6">Thanh toán</text>
+  </g>
+  <g transform="translate(566 328)">
+    <rect class="satellite" x="-82" y="-26" width="164" height="52" rx="26"/>
+    <circle class="dot" cx="-52" r="5"/>
+    <text class="label" x="14" y="6">Phản hồi</text>
+  </g>
+  <g transform="translate(154 328)">
+    <rect class="satellite" x="-82" y="-26" width="164" height="52" rx="26"/>
+    <circle class="dot" cx="-52" r="5"/>
+    <text class="label" x="14" y="6">Vận hành</text>
+  </g>
+  <g transform="translate(154 152)">
+    <rect class="satellite" x="-78" y="-26" width="156" height="52" rx="26"/>
+    <circle class="dot" cx="-48" r="5"/>
+    <text class="label" x="14" y="6">Đặt lịch</text>
+  </g>
+
+  <circle class="signal" r="6"/>
+</svg>

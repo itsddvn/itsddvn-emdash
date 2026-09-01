@@ -14,6 +14,14 @@ export function localePath(locale: SiteLocale, path: string): string {
 	return getRelativeLocaleUrl(locale, normalized);
 }
 
+export function entrySlugForLocale(entryId: string, locale: SiteLocale): string {
+	const normalized = entryId.replace(/^\/+|\/+$/g, "");
+	const localePrefix = `${locale}/`;
+	return normalized.startsWith(localePrefix)
+		? normalized.slice(localePrefix.length)
+		: normalized;
+}
+
 export function stripLocalePrefix(pathname: string): string {
 	if (pathname === "/en") return "/";
 	return pathname.replace(/^\/en(?=\/|$)/, "") || "/";

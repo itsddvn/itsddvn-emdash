@@ -1,547 +1,248 @@
 ---
-import {
-	getEmDashCollection,
-	getTermsForEntries,
-	getSiteSettings,
-} from "emdash";
-import { Image } from "emdash/ui";
+import { getEmDashCollection, getTermsForEntries } from "emdash";
 import Base from "../layouts/Base.astro";
-import PostCard from "../components/PostCard.astro";
+import FounderPortrait from "../components/FounderPortrait.astro";
+import { getFounderProfile, publicChannels } from "../data/founder-profile";
 import { getReadingTime } from "../utils/reading-time";
-import { resolveBlogSiteIdentity } from "../utils/site-identity";
-import { getMessages, localePath, resolveLocale } from "../utils/i18n";
+import { entrySlugForLocale, localePath, resolveLocale } from "../utils/i18n";
+import operatingMap from "../assets/founder/operating-system-map.svg";
+import myAgentsMapVi from "../assets/founder/myagents-system-map.svg";
+import myAgentsMapEn from "../assets/founder/myagents-system-map-en.svg";
+import "../styles/founder-home.css";
 
-// Limit to what we render (1 featured + 6 grid). The DB does the slicing
-// instead of fetching every post and discarding the tail in JS.
-const POSTS_PER_PAGE = 7;
 const locale = resolveLocale(Astro.currentLocale);
-const copy = getMessages(locale);
-
-const [{ entries: posts, cacheHint }, settings] = await Promise.all([
-	getEmDashCollection("posts", {
-		locale,
-		orderBy: { published_at: "desc" },
-		limit: POSTS_PER_PAGE + 1, // +1 to detect "view all" need
-	}),
-	getSiteSettings(),
-]);
-const { siteTitle } = resolveBlogSiteIdentity(settings);
+const profile = getFounderProfile(locale);
+const { entries: posts, cacheHint } = await getEmDashCollection("posts", {
+	locale,
+	orderBy: { published_at: "desc" },
+	limit: 3,
+});
 
 if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
 
-// Trim the lookahead post used to detect overflow
-const visiblePosts = posts.slice(0, POSTS_PER_PAGE);
-const hasMorePosts = posts.length > POSTS_PER_PAGE;
-
-// Find the first post with a featured image for the hero
-const featuredPost = visiblePosts.find((p) => p.data.featured_image);
-const featuredIndex = featuredPost ? visiblePosts.indexOf(featuredPost) : -1;
-
-// Get remaining posts (exclude featured if found, limit to 6 for grid)
-const gridPosts = visiblePosts.filter((_, i) => i !== featuredIndex).slice(0, 6);
-
-// Single batched query for tags across the featured post + grid posts.
-// Avoids the N+1 pattern of calling getEntryTerms() per entry.
-// Bylines are already hydrated on entry.data.bylines by getEmDashCollection.
-const tagEntryIds = [
-	...(featuredPost ? [featuredPost.data.id] : []),
-	...gridPosts.map((p) => p.data.id),
-];
-const tagsByEntry = await getTermsForEntries("posts", tagEntryIds, "tag", { locale });
-
-const featuredTags = featuredPost
-	? (tagsByEntry.get(featuredPost.data.id) ?? []).map((t) => ({
-			slug: t.slug,
-			label: t.label,
-		}))
-	: [];
-const featuredBylines = featuredPost?.data.bylines ?? [];
-
-const gridPostsWithTags = gridPosts.map((post) => ({
+const categoriesByEntry = await getTermsForEntries(
+	"posts",
+	posts.map((post) => post.data.id),
+	"category",
+	{ locale },
+);
+const recentPosts = posts.map((post) => ({
 	post,
-	tags: (tagsByEntry.get(post.data.id) ?? []).map((t) => ({
-		slug: t.slug,
-		label: t.label,
-	})),
-	bylines: post.data.bylines ?? [],
+	category: categoriesByEntry.get(post.data.id)?.[0]?.label ?? profile.writing.label,
+	readingTime: getReadingTime(post.data.content),
 }));
+const featuredPost = recentPosts[0];
+const secondaryPosts = recentPosts.slice(1, 3);
+const myAgentsMap = locale === "en" ? myAgentsMapEn : myAgentsMapVi;
 
-// Format date helper
-function formatDate(date: Date | null | undefined) {
-	if (!date) return null;
-	return date.toLocaleDateString(locale === "vi" ? "vi-VN" : "en-US", {
+const formatDate = (date: Date | null | undefined) =>
+	date?.toLocaleDateString(locale === "vi" ? "vi-VN" : "en-US", {
+		day: "2-digit",
+		month: "2-digit",
 		year: "numeric",
-		month: "long",
-		day: "numeric",
 	});
-}
 ---
 
-<Base title={siteTitle} description={copy.siteTagline}>
-	{
-		posts.length === 0 ? (
-			<section class="empty-state">
-				<h2>{copy.noPostsTitle}</h2>
-				<p>{copy.noPostsBody}</p>
-				<a href="/_emdash/admin/content/posts/new" class="btn">
-					{copy.createPost}
-				</a>
-			</section>
-		) : (
-			<div class="home-content">
-				<header class="home-masthead">
-					<p class="masthead-kicker">{copy.topics}</p>
-					<h1 class="masthead-title">{siteTitle}</h1>
-					<p class="masthead-copy">{copy.siteTagline}</p>
-				</header>
-				{/* Featured Post - Side by side */}
-				{featuredPost && (
-					<section class="featured-section">
-						<div class="featured-grid">
-							<a href={localePath(locale, `/posts/${featuredPost.id}`)} class="featured-image-link">
-								<div class="featured-image">
-									<Image image={featuredPost.data.featured_image} />
+<Base
+	title={profile.metaTitle}
+	description={profile.metaDescription}
+	bodyClass="founder-home"
+>
+	<div class="founder-shell">
+		<section class="founder-hero founder-panel" id="identity">
+			<FounderPortrait
+				alt={profile.hero.portraitAlt}
+				strengthsLabel={profile.hero.strengthsLabel}
+			/>
+			<div class="founder-hero-copy">
+				<p class="founder-kicker">{profile.hero.kicker}</p>
+				<h1>
+					<span class="headline-line">{profile.hero.lineOne}</span>
+					<span class="headline-line">
+						{profile.hero.lineTwoPrefix} <strong>{profile.hero.lineTwoHighlight}</strong>
+					</span>
+				</h1>
+				<p>{profile.hero.summary}</p>
+				<div class="founder-actions">
+					<a class="ui-button" href="#systems">{profile.hero.workCta}</a>
+					<a class="ui-button ui-button--secondary" href="#articles">{profile.hero.articlesCta}</a>
+				</div>
+			</div>
+		</section>
+
+		<section class="operating-showcase founder-panel" id="practice" aria-labelledby="practice-title">
+			<figure class="illustration-frame">
+				<img
+					src={operatingMap.src}
+					alt={profile.method.imageAlt}
+					width="720"
+					height="480"
+					loading="lazy"
+					decoding="async"
+				/>
+			</figure>
+			<div class="operating-copy">
+				<span class="founder-section-label">{profile.method.label}</span>
+				<h2 id="practice-title">{profile.method.title}</h2>
+				<ol class="operating-steps">
+					{
+						profile.method.steps.map((step, index) => (
+							<li>
+								<span>{String(index + 1).padStart(2, "0")}</span>
+								<div>
+									<h3>{step.title}</h3>
+									<p>{step.description}</p>
+								</div>
+							</li>
+						))
+					}
+				</ol>
+			</div>
+		</section>
+
+		<section class="systems-section founder-panel" id="systems" aria-labelledby="systems-title">
+			<header class="founder-section-head">
+				<span class="founder-section-label">{profile.work.label}</span>
+				<h2 id="systems-title">{profile.work.title}</h2>
+			</header>
+			<div class="systems-layout">
+				{
+					profile.work.systems.map((system) =>
+						system.featured ? (
+							<a
+								class="system-feature"
+								href={system.href}
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								<figure class="system-visual">
+									<img
+										src={myAgentsMap.src}
+										alt={locale === "vi" ? "Sơ đồ hệ sinh thái MyAgents" : "MyAgents ecosystem diagram"}
+										width="720"
+										height="480"
+										loading="lazy"
+										decoding="async"
+									/>
+								</figure>
+								<div class="system-feature-copy">
+									<span>{system.mode}</span>
+									<h3>{system.title}</h3>
+									<p>{system.description}</p>
+									<b>{profile.work.storyCta}</b>
 								</div>
 							</a>
-							<div class="featured-content">
-								<div class="featured-meta">
-									{featuredBylines.length > 0 && (
-										<>
-											<div class="featured-bylines">
-												{featuredBylines.slice(0, 2).map((credit, index) => (
-													<>
-														{index > 0 && <span class="byline-sep">,</span>}
-														<span class="featured-byline">
-															{credit.byline.avatarMediaId && (
-																<img
-																	src={`/_emdash/api/media/file/${credit.byline.avatarMediaId}`}
-																	alt={credit.byline.displayName}
-																	class="featured-byline-avatar"
-																/>
-															)}
-															<span class="featured-byline-name">
-																{credit.byline.displayName}
-															</span>
-														</span>
-													</>
-												))}
-												{featuredBylines.length > 2 && (
-													<span class="byline-more">
-														+{featuredBylines.length - 2}
-													</span>
-												)}
-											</div>
-											<span class="meta-dot" />
-										</>
-									)}
-									{formatDate(featuredPost.data.publishedAt) && (
-										<time>{formatDate(featuredPost.data.publishedAt)}</time>
-									)}
-									<span class="meta-dot" />
-									<span>
-										{copy.minuteRead(getReadingTime(featuredPost.data.content))}
-									</span>
-								</div>
+						) : null,
+					)
+				}
+				<div class="system-stack">
+					{
+						profile.work.systems
+							.filter((system) => !system.featured)
+							.map((system) => (
 								<a
-									href={localePath(locale, `/posts/${featuredPost.id}`)}
-									class="featured-title-link"
+									class="system-card"
+									href={system.href}
+									target="_blank"
+									rel="noopener noreferrer"
 								>
-									<h2 class="featured-title">{featuredPost.data.title}</h2>
+									<span>{system.mode}</span>
+									<h3>{system.title}</h3>
+									<p>{system.description}</p>
+									<i aria-hidden="true">↗</i>
 								</a>
-								{featuredPost.data.excerpt && (
-									<p class="featured-excerpt">{featuredPost.data.excerpt}</p>
-								)}
-								{featuredTags.length > 0 && (
-									<div class="featured-tags">
-										{featuredTags.map((tag) => (
-											<a href={localePath(locale, `/tag/${tag.slug}`)} class="featured-tag">
-												{tag.label}
-											</a>
-										))}
-									</div>
-								)}
-							</div>
-						</div>
-					</section>
-				)}
+							))
+					}
+				</div>
+			</div>
+		</section>
 
-				{/* Latest Posts */}
-				{gridPostsWithTags.length > 0 && (
-					<section class="posts-section">
-						<header class="section-header">
-							<h2 class="section-title">{copy.latest}</h2>
-							{hasMorePosts && (
-								<a href={localePath(locale, "/posts")} class="section-link">
-									{copy.viewAll}
+		<section class="founder-writing founder-panel" id="articles" aria-labelledby="articles-title">
+			<header>
+				<div>
+					<span class="founder-section-label">{profile.writing.label}</span>
+					<h2 id="articles-title">{profile.writing.title}</h2>
+				</div>
+				<a href={localePath(locale, "/posts")}>{profile.writing.viewAll}</a>
+			</header>
+			{
+				featuredPost ? (
+					<div class="writing-layout">
+						<a class="writing-feature" href={localePath(locale, `/posts/${entrySlugForLocale(featuredPost.post.id, locale)}`)}>
+							<span>{featuredPost.category}</span>
+							<h3>{featuredPost.post.data.title || profile.writing.untitled}</h3>
+							<footer>
+								<time datetime={featuredPost.post.data.publishedAt?.toISOString()}>
+									{formatDate(featuredPost.post.data.publishedAt)}
+								</time>
+								<b>{featuredPost.readingTime} {locale === "vi" ? "phút đọc" : "min read"}</b>
+							</footer>
+						</a>
+						<div class="writing-rail">
+							{secondaryPosts.map(({ post, category }) => (
+								<a href={localePath(locale, `/posts/${entrySlugForLocale(post.id, locale)}`)}>
+									<span>{category}</span>
+									<h3>{post.data.title || profile.writing.untitled}</h3>
+									<i aria-hidden="true">↗</i>
 								</a>
-							)}
-						</header>
-						<div class="posts-grid">
-							{gridPostsWithTags.map(({ post, tags, bylines }) => (
-								<PostCard
-									title={post.data.title ?? copy.untitled}
-									excerpt={post.data.excerpt}
-									featuredImage={post.data.featured_image}
-									href={localePath(locale, `/posts/${post.id}`)}
-									date={post.data.publishedAt ?? undefined}
-									readingTime={getReadingTime(post.data.content)}
-									tags={tags}
-									bylines={bylines}
-									locale={locale}
-								/>
 							))}
 						</div>
-					</section>
-				)}
+					</div>
+				) : (
+					<p class="founder-writing-empty">
+						{locale === "vi" ? "Chưa có bài viết được xuất bản." : "No published articles yet."}
+					</p>
+				)
+			}
+		</section>
+
+		<section class="founder-contact founder-panel">
+			<div>
+				<span class="founder-section-label">{profile.contact.label}</span>
+				<h2><span class="nowrap">{profile.contact.handle}</span></h2>
 			</div>
-		)
-	}
+			<nav aria-label={profile.contact.navigationLabel}>
+				{
+					publicChannels.map((channel) => (
+						<a class="ui-button ui-button--secondary" href={channel.href} target="_blank" rel="me noopener noreferrer">
+							{channel.label}
+						</a>
+					))
+				}
+			</nav>
+		</section>
+	</div>
+
+	<script>
+		const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+		const founderPanels = document.querySelectorAll<HTMLElement>(".founder-panel");
+
+		if (!reducedMotion.matches && "IntersectionObserver" in window) {
+			founderPanels.forEach((panel) => panel.classList.add("reveal-ready"));
+			const observer = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						if (!entry.isIntersecting) return;
+						entry.target.classList.add("is-visible");
+						observer.unobserve(entry.target);
+					});
+				},
+				{ rootMargin: "-8% 0px -12%", threshold: 0.12 },
+			);
+			founderPanels.forEach((panel) => observer.observe(panel));
+		}
+
+		document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((link) => {
+			link.addEventListener("click", (event) => {
+				const href = link.getAttribute("href");
+				const target = href ? document.querySelector<HTMLElement>(href) : null;
+				if (!target) return;
+				event.preventDefault();
+				target.scrollIntoView({
+					behavior: reducedMotion.matches ? "auto" : "smooth",
+					block: "start",
+				});
+			});
+		});
+	</script>
 </Base>
-
-<style>
-	.home-content {
-		max-width: var(--wide-width);
-		margin: 0 auto;
-		padding: var(--spacing-12) var(--spacing-6) var(--spacing-24);
-	}
-
-	.home-masthead {
-		max-width: 960px;
-		padding: var(--spacing-12) 0 var(--spacing-16);
-		border-bottom: 1px solid var(--color-border);
-	}
-
-	.masthead-kicker {
-		margin-bottom: var(--spacing-4);
-		color: var(--color-brand);
-		font-size: var(--font-size-xs);
-		font-weight: 700;
-		letter-spacing: var(--tracking-wider);
-		text-transform: uppercase;
-	}
-
-	.masthead-title {
-		max-width: 12ch;
-		font-size: clamp(4rem, 9vw, 6rem);
-		font-weight: var(--font-weight-display);
-		line-height: var(--leading-tight);
-		letter-spacing: var(--tracking-tight);
-		text-transform: uppercase;
-	}
-
-	.masthead-copy {
-		max-width: 44ch;
-		margin-top: var(--spacing-6);
-		color: var(--color-text-secondary);
-		font-size: var(--font-size-xl);
-		line-height: var(--leading-relaxed);
-	}
-
-	.featured-section {
-		margin: var(--spacing-16) 0 var(--spacing-24);
-		border-top: 1px solid var(--color-border);
-		border-bottom: 1px solid var(--color-border);
-	}
-
-	.featured-grid {
-		display: grid;
-		grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.8fr);
-		min-height: 560px;
-	}
-
-	.featured-image-link {
-		display: block;
-		min-width: 0;
-		overflow: hidden;
-	}
-
-	.featured-image {
-		height: 100%;
-		overflow: hidden;
-		background: var(--color-surface);
-	}
-
-	.featured-image img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		filter: saturate(0.82) contrast(1.04);
-		transition: transform 500ms var(--ease-out-quart);
-	}
-
-	.featured-image-link:hover .featured-image img,
-	.featured-image-link:focus-visible .featured-image img,
-	.featured-grid:has(.featured-title-link:hover) .featured-image img {
-		transform: scale(1.025);
-	}
-
-	.featured-content {
-		display: flex;
-		flex-direction: column;
-		justify-content: flex-end;
-		gap: var(--spacing-5);
-		padding: var(--spacing-12);
-		background: var(--color-earth);
-		color: var(--color-inverse);
-	}
-
-	.featured-meta {
-		display: flex;
-		align-items: center;
-		flex-wrap: wrap;
-		column-gap: var(--spacing-3);
-		row-gap: var(--spacing-1);
-		color: var(--color-inverse-muted);
-		font-size: var(--font-size-sm);
-	}
-
-	.meta-dot {
-		width: 4px;
-		height: 4px;
-		background: var(--color-brand);
-	}
-
-	.featured-bylines {
-		display: flex;
-		align-items: center;
-		gap: var(--spacing-1);
-	}
-
-	.featured-byline {
-		display: inline-flex;
-		align-items: center;
-		gap: var(--spacing-2);
-	}
-
-	.featured-byline-avatar {
-		width: var(--avatar-size-md);
-		height: var(--avatar-size-md);
-		border: 1px solid color-mix(in oklch, var(--color-inverse) 36%, transparent);
-		border-radius: 50%;
-		object-fit: cover;
-	}
-
-	.featured-byline-name {
-		color: var(--color-inverse);
-		font-weight: 600;
-	}
-
-	.byline-sep,
-	.byline-more {
-		color: var(--color-inverse-muted);
-	}
-
-	.featured-title-link {
-		color: inherit;
-		text-decoration: none;
-	}
-
-	.featured-title {
-		max-width: 12ch;
-		font-size: clamp(2.75rem, 5vw, 4.5rem);
-		font-weight: var(--font-weight-display);
-		line-height: var(--leading-tight);
-		letter-spacing: var(--tracking-tight);
-		transition: color var(--transition-fast);
-	}
-
-	.featured-title-link:hover .featured-title,
-	.featured-title-link:focus-visible .featured-title {
-		color: var(--color-brand);
-	}
-
-	.featured-excerpt {
-		max-width: 34ch;
-		color: var(--color-inverse-muted);
-		font-size: var(--font-size-lg);
-		line-height: var(--leading-relaxed);
-	}
-
-	.featured-tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--spacing-2);
-		margin-top: var(--spacing-2);
-	}
-
-	.featured-tag {
-		display: inline-flex;
-		align-items: center;
-		min-height: 44px;
-		min-width: 44px;
-		padding: var(--spacing-2) var(--spacing-3);
-		border: 1px solid color-mix(in oklch, var(--color-inverse) 28%, transparent);
-		color: var(--color-inverse-muted);
-		font-size: var(--font-size-xs);
-		font-weight: 600;
-		text-decoration: none;
-		transition:
-			border-color var(--transition-fast),
-			color var(--transition-fast),
-			transform var(--transition-fast);
-	}
-
-	.featured-tag:hover,
-	.featured-tag:focus-visible {
-		border-color: var(--color-brand);
-		color: var(--color-inverse);
-		transform: translateY(-2px);
-	}
-
-	.section-header {
-		display: flex;
-		align-items: baseline;
-		justify-content: space-between;
-		margin-bottom: var(--spacing-8);
-	}
-
-	.section-title {
-		font-size: var(--font-size-4xl);
-		font-weight: var(--font-weight-display);
-		letter-spacing: var(--tracking-tight);
-	}
-
-	.section-link {
-		position: relative;
-		min-height: 44px;
-		padding: var(--spacing-3) 0;
-		color: var(--color-brand);
-		font-size: var(--font-size-sm);
-		font-weight: 700;
-		text-decoration: none;
-	}
-
-	.section-link::after {
-		position: absolute;
-		right: 0;
-		bottom: var(--spacing-2);
-		left: 0;
-		height: 1px;
-		background: currentColor;
-		content: "";
-		transform: scaleX(0);
-		transform-origin: right;
-		transition: transform var(--transition-base);
-	}
-
-	.section-link:hover::after,
-	.section-link:focus-visible::after {
-		transform: scaleX(1);
-		transform-origin: left;
-	}
-
-	.posts-grid {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		border-top: 1px solid var(--color-border);
-		border-left: 1px solid var(--color-border);
-	}
-
-	.posts-grid :global(.post-card) {
-		padding: var(--spacing-8);
-		border-right: 1px solid var(--color-border);
-		border-bottom: 1px solid var(--color-border);
-	}
-
-	.empty-state {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: var(--spacing-3);
-		max-width: 480px;
-		margin: 0 auto;
-		padding: var(--spacing-20) var(--spacing-6);
-	}
-
-	.empty-state h2 {
-		font-size: var(--font-size-3xl);
-		font-weight: var(--font-weight-heading);
-	}
-
-	.empty-state p {
-		color: var(--color-muted);
-	}
-
-	.btn {
-		display: inline-flex;
-		align-items: center;
-		min-height: 44px;
-		margin-top: var(--spacing-4);
-		padding: var(--spacing-3) var(--spacing-6);
-		background: var(--color-brand);
-		color: var(--color-on-brand);
-		font-size: var(--font-size-sm);
-		font-weight: 700;
-		text-decoration: none;
-		transition:
-			background var(--transition-fast),
-			transform var(--transition-fast);
-	}
-
-	.btn:hover,
-	.btn:focus-visible {
-		background: var(--color-brand-hover);
-		transform: translateY(-2px);
-	}
-
-	@media (max-width: 900px) {
-		.home-content {
-			padding: var(--spacing-8) var(--spacing-4) var(--spacing-16);
-		}
-
-		.home-masthead {
-			padding: var(--spacing-8) 0 var(--spacing-12);
-		}
-
-		.featured-section {
-			margin: var(--spacing-12) 0 var(--spacing-16);
-		}
-
-		.featured-grid {
-			grid-template-columns: 1fr;
-			min-height: 0;
-		}
-
-		.featured-image {
-			aspect-ratio: 16 / 9;
-		}
-
-		.featured-content {
-			padding: var(--spacing-8);
-		}
-	}
-
-	@media (max-width: 600px) {
-		.masthead-title {
-			font-size: clamp(3.5rem, 18vw, 5rem);
-		}
-
-		.masthead-copy {
-			font-size: var(--font-size-lg);
-		}
-
-		.featured-image {
-			aspect-ratio: 4 / 3;
-		}
-
-		.featured-content {
-			padding: var(--spacing-6);
-		}
-
-		.featured-title {
-			font-size: clamp(2.75rem, 13vw, 3.5rem);
-		}
-
-		.section-title {
-			font-size: var(--font-size-3xl);
-		}
-
-		.posts-grid {
-			grid-template-columns: 1fr;
-		}
-
-		.posts-grid :global(.post-card) {
-			padding: var(--spacing-6);
-		}
-	}
-</style>

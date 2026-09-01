@@ -1,0 +1,254 @@
+---
+import { Image } from "astro:assets";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import LocalizedSearch from "./LocalizedSearch.astro";
+import { getFounderProfile } from "../data/founder-profile";
+import logo from "../assets/brand/itsdd-logo-on-dark.png";
+import { localePath, type SiteLocale } from "../utils/i18n";
+
+interface Props {
+	locale: SiteLocale;
+	localePaths?: Partial<Record<SiteLocale, string>>;
+	menuItems: Array<{ label: string; url: string; target?: string | null }>;
+	isLoggedIn?: boolean;
+}
+
+const { locale, localePaths, menuItems, isLoggedIn = false } = Astro.props;
+const profile = getFounderProfile(locale);
+const homeHref = localePath(locale, "/");
+---
+
+<header class="site-header founder-header">
+	<div class="header-inner">
+		<a class="site-title founder-brand" href={homeHref} aria-label="itsdd.vn">
+			<Image
+				src={logo}
+				alt=""
+				widths={[146, 292]}
+				sizes="146px"
+				loading="eager"
+				fetchpriority="high"
+			/>
+		</a>
+
+		<nav class="primary-nav" id="primary-nav" aria-label={profile.navigation.menu}>
+			{
+				menuItems.map((item) => (
+					<a
+						href={item.url}
+						target={item.target}
+						rel={item.target === "_blank" ? "noopener noreferrer" : undefined}
+					>
+						{item.label}
+					</a>
+				))
+			}
+			<div class="nav-search">
+				<LocalizedSearch collections={["posts", "pages"]} />
+			</div>
+		</nav>
+
+		<div class="header-tools">
+			{
+				isLoggedIn && (
+					<a class="admin-link" href="/_emdash/admin">
+						{locale === "vi" ? "Quản trị" : "Admin"}
+					</a>
+				)
+			}
+			<div class="language-slot">
+				<LanguageSwitcher paths={localePaths} />
+			</div>
+			<button
+				class="menu-toggle"
+				type="button"
+				aria-expanded="false"
+				aria-controls="primary-nav"
+			>
+				{profile.navigation.menu}
+			</button>
+		</div>
+	</div>
+</header>
+
+<script>
+	const menuToggle = document.querySelector<HTMLButtonElement>(".menu-toggle");
+	const primaryNav = document.querySelector<HTMLElement>(".primary-nav");
+
+	menuToggle?.addEventListener("click", () => {
+		const open = primaryNav?.classList.toggle("is-open") ?? false;
+		menuToggle.setAttribute("aria-expanded", String(open));
+	});
+
+	primaryNav?.querySelectorAll("a").forEach((link) => {
+		link.addEventListener("click", () => {
+			primaryNav.classList.remove("is-open");
+			menuToggle?.setAttribute("aria-expanded", "false");
+		});
+	});
+</script>
+
+<style>
+	.site-header {
+		position: sticky;
+		top: 8px;
+		z-index: 30;
+		width: min(calc(100% - 32px), 1320px);
+		margin: 16px auto 0;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius);
+		background: color-mix(in oklch, var(--color-bg) 92%, transparent);
+		backdrop-filter: blur(14px);
+	}
+
+	.header-inner {
+		min-height: 64px;
+		display: flex;
+		align-items: center;
+		gap: 24px;
+		padding: 0 24px;
+	}
+
+	.site-title {
+		min-height: 44px;
+		display: inline-flex;
+		align-items: center;
+		color: var(--color-text);
+		font-family: var(--font-heading);
+		font-size: var(--type-body-size);
+		font-weight: 700;
+		letter-spacing: -0.02em;
+		text-decoration: none;
+	}
+
+	.site-title :global(img) {
+		width: 146px;
+		height: auto;
+		display: block;
+	}
+
+	.primary-nav {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+		margin-inline: auto;
+	}
+
+	.primary-nav > a {
+		min-height: 44px;
+		display: inline-flex;
+		align-items: center;
+		color: var(--color-text-secondary);
+		font-size: var(--type-meta-size);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.primary-nav a:hover,
+	.primary-nav a:focus-visible {
+		color: var(--color-brand);
+	}
+
+
+	.nav-search {
+		width: 180px;
+	}
+
+	.nav-search :global(.site-search) {
+		width: 100%;
+	}
+
+	.header-tools {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+	.admin-link {
+		min-height: 44px;
+		display: inline-flex;
+		align-items: center;
+		color: var(--color-text-secondary);
+		font-size: var(--type-meta-size);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.admin-link:hover,
+	.admin-link:focus-visible {
+		color: var(--color-brand);
+	}
+
+	.menu-toggle {
+		min-height: 44px;
+		display: none;
+		padding: 0 16px;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius);
+		background: var(--color-surface);
+		color: var(--color-text);
+		font: 700 0.875rem var(--font-body);
+		cursor: pointer;
+	}
+
+	@media (max-width: 860px) {
+		.site-header {
+			width: calc(100% - 16px);
+			margin-top: 8px;
+		}
+
+		.header-inner {
+			position: relative;
+			flex-wrap: wrap;
+			padding: 10px 16px;
+		}
+
+		.primary-nav {
+			order: 3;
+			width: 100%;
+			display: none;
+			align-items: stretch;
+			gap: 0;
+			padding-top: 8px;
+			border-top: 1px solid var(--color-border-subtle);
+		}
+
+		.primary-nav.is-open {
+			display: grid;
+		}
+
+		:global(.no-js) .primary-nav {
+			display: grid;
+		}
+
+		:global(.no-js) .menu-toggle {
+			display: none;
+		}
+
+		.primary-nav > a {
+			width: 100%;
+			padding-inline: 8px;
+			border-bottom: 1px solid var(--color-border-subtle);
+		}
+
+		.nav-search {
+			width: 100%;
+			padding: 8px;
+		}
+
+		.header-tools {
+			margin-inline-start: auto;
+		}
+
+		.menu-toggle {
+			display: inline-flex;
+			align-items: center;
+		}
+	}
+
+	@media (max-width: 520px) {
+		.header-inner {
+			gap: 8px;
+		}
+	}
+</style>

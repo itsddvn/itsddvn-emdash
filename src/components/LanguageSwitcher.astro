@@ -40,38 +40,35 @@ const links = SUPPORTED_LOCALES.map((locale) => ({
 	.language-switcher {
 		display: inline-flex;
 		align-items: center;
-		border: 1px solid var(--color-border);
+		gap: var(--spacing-2);
 	}
 
 	a {
+		position: relative;
+		min-width: 44px;
+		min-height: 44px;
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		min-width: 44px;
-		min-height: 44px;
-		padding: 0 var(--spacing-2);
 		color: var(--color-muted);
-		font-size: var(--font-size-xs);
+		font-size: var(--type-label-size);
 		font-weight: 700;
+		letter-spacing: 0.08em;
 		text-decoration: none;
-		transition:
-			background var(--transition-fast),
-			color var(--transition-fast),
-			transform var(--transition-fast);
+		transition: color var(--transition-fast);
 	}
 
-	a + a {
-		border-left: 1px solid var(--color-border);
+	a + a::before {
+		position: absolute;
+		left: calc(var(--spacing-1) * -1);
+		color: var(--color-border);
+		content: "/";
 	}
 
 	a:hover,
-	a:focus-visible {
-		background: var(--color-bg-subtle);
-		color: var(--color-brand);
-	}
-
+	a:focus-visible,
 	a[aria-current="page"] {
-		background: var(--color-brand);
-		color: var(--color-on-brand);
+		background: transparent;
+		color: var(--color-brand);
 	}
 </style>

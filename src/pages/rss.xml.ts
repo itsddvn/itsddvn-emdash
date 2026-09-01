@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { getEmDashCollection, getSiteSettings } from "emdash";
 
 import { resolveBlogSiteIdentity } from "../utils/site-identity";
-import { getMessages, localePath, resolveLocale } from "../utils/i18n";
+import { entrySlugForLocale, getMessages, localePath, resolveLocale } from "../utils/i18n";
 
 export const GET: APIRoute = async ({ currentLocale, url }) => {
 	const locale = resolveLocale(currentLocale);
@@ -21,7 +21,10 @@ export const GET: APIRoute = async ({ currentLocale, url }) => {
 			if (!post.data.publishedAt) return null;
 			const pubDate = post.data.publishedAt.toUTCString();
 
-			const postUrl = new URL(localePath(locale, `/posts/${post.id}`), siteUrl).toString();
+			const postUrl = new URL(
+				localePath(locale, `/posts/${entrySlugForLocale(post.id, locale)}`),
+				siteUrl,
+			).toString();
 			const title = escapeXml(post.data.title || copy.untitled);
 			const description = escapeXml(post.data.excerpt || "");
 

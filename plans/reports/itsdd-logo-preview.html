@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>itsdd.vn · Logo preview</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #100805;
+      --paper: #fdfcf9;
+      --cream: #f7f1e9;
+      --orange: #f56d03;
+      --muted: #c7bcaf;
+      --line: #3b2c25;
+      --surface: #1d120e;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      min-width: 320px;
+      background: var(--ink);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      width: min(100% - 32px, 1240px);
+      margin: 0 auto;
+      padding: 32px 0 64px;
+      background: var(--ink);
+      color: var(--cream);
+      font: 16px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    h1, h2, p { margin: 0; }
+
+    a { color: inherit; }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
+      padding: 14px 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--surface) 88%, transparent);
+    }
+
+    .topbar strong {
+      letter-spacing: -0.02em;
+    }
+
+    .topbar span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .hero {
+      display: grid;
+      min-height: 420px;
+      place-items: center;
+      padding: 64px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(90deg, color-mix(in srgb, var(--line) 24%, transparent) 1px, transparent 1px) 0 0 / 48px 48px,
+        linear-gradient(color-mix(in srgb, var(--line) 24%, transparent) 1px, transparent 1px) 0 0 / 48px 48px,
+        var(--surface);
+    }
+
+    .hero img {
+      width: min(100%, 820px);
+      height: auto;
+      filter: drop-shadow(0 18px 36px rgb(0 0 0 / 0.28));
+    }
+
+    .intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 0.7fr);
+      gap: 32px;
+      padding: 44px 0;
+    }
+
+    .eyebrow {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--orange);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 16ch;
+      font-size: clamp(2.4rem, 7vw, 5.6rem);
+      line-height: 0.94;
+      letter-spacing: -0.055em;
+    }
+
+    .intro p {
+      align-self: end;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.25rem);
+    }
+
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .panel {
+      min-height: 300px;
+      display: grid;
+      align-content: space-between;
+      gap: 48px;
+      padding: 28px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .panel--dark { background: var(--ink); }
+    .panel--light {
+      border-color: #ded6cf;
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    .panel-label {
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .panel--dark .panel-label { color: var(--muted); }
+    .panel--light .panel-label { color: #675a52; }
+
+    .panel img {
+      width: min(100%, 640px);
+      height: auto;
+      justify-self: center;
+    }
+
+    .application {
+      margin-top: 18px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .mock-header {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      margin-top: 18px;
+      padding: 14px 22px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--ink);
+    }
+
+    .mock-header > img {
+      width: 146px;
+      height: auto;
+    }
+
+    .mock-nav {
+      display: flex;
+      gap: 24px;
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 650;
+    }
+
+    .mock-action {
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--cream);
+      font-weight: 750;
+    }
+
+    .mark-section {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .mark-card,
+    .scale-card {
+      min-width: 0;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .mark-card {
+      display: grid;
+      place-items: center;
+    }
+
+    .mark-card img {
+      width: min(100%, 320px);
+      height: auto;
+    }
+
+    .scale-card h2 {
+      margin-bottom: 24px;
+      font-size: 1.1rem;
+    }
+
+    .scale-row {
+      display: flex;
+      align-items: end;
+      gap: clamp(14px, 4vw, 36px);
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .scale-item {
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    .scale-item img {
+      width: var(--size);
+      height: var(--size);
+      border-radius: max(3px, calc(var(--size) * 0.12));
+    }
+
+    .assets {
+      margin-top: 18px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .assets h2 { margin-bottom: 18px; }
+
+    .asset-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .asset-list a {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--line);
+      text-decoration: none;
+    }
+
+    .asset-list a:hover,
+    .asset-list a:focus-visible { color: var(--orange); }
+
+    .asset-list code {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .asset-list span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding-top: 26px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    @media (max-width: 760px) {
+      body { width: min(100% - 20px, 1240px); padding-top: 10px; }
+      .topbar { align-items: flex-start; flex-direction: column; gap: 4px; }
+      .hero { min-height: 300px; padding: 30px; }
+      .intro,
+      .showcase-grid,
+      .mark-section { grid-template-columns: 1fr; }
+      .intro { padding: 34px 4px; }
+      .mock-nav { display: none; }
+      .mock-action { margin-left: auto; }
+      .panel { min-height: 240px; padding: 22px; }
+      footer { flex-direction: column; gap: 6px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <strong>itsdd.vn · Identity preview</strong>
+    <span>Generated with native image generation</span>
+  </header>
+
+  <main>
+    <section class="hero" aria-label="Logo chính trên nền tối">
+      <img src="../../src/assets/brand/itsdd-logo-on-dark.png" alt="Logo itsdd.vn: biểu tượng hai chữ d liên kết và wordmark" />
+    </section>
+
+    <section class="intro">
+      <div>
+        <span class="eyebrow">Build · Operate · Codify</span>
+        <h1>Một vòng lặp thành dấu hiệu.</h1>
+      </div>
+      <p>Hai chữ <strong>dd</strong> nối thành một hệ vận hành liên tục. Cam là tín hiệu đang chạy; đen và trắng giữ logo rõ ở mọi bề mặt.</p>
+    </section>
+
+    <section class="showcase-grid" aria-label="Biến thể nền sáng và tối">
+      <article class="panel panel--dark">
+        <span class="panel-label">Dark surface</span>
+        <img src="../../src/assets/brand/itsdd-logo-on-dark.png" alt="Logo itsdd.vn dành cho nền tối" />
+      </article>
+      <article class="panel panel--light">
+        <span class="panel-label">Light surface</span>
+        <img src="../../src/assets/brand/itsdd-logo-on-light.png" alt="Logo itsdd.vn dành cho nền sáng" />
+      </article>
+    </section>
+
+    <section class="application" aria-labelledby="header-title">
+      <span class="eyebrow">Application</span>
+      <h2 id="header-title">Header website</h2>
+      <div class="mock-header">
+        <img src="../../src/assets/brand/itsdd-logo-on-dark.png" alt="itsdd.vn" />
+        <nav class="mock-nav" aria-label="Điều hướng mẫu">
+          <span>Trang chủ</span><span>Giới thiệu</span><span>Bài viết</span>
+        </nav>
+        <span class="mock-action">Danh mục</span>
+      </div>
+    </section>
+
+    <section class="mark-section" aria-label="Biểu tượng và kiểm tra kích thước">
+      <article class="mark-card">
+        <img src="../../src/assets/brand/itsdd-mark-on-dark.png" alt="Biểu tượng dd của itsdd.vn" />
+      </article>
+      <article class="scale-card">
+        <span class="eyebrow">Small-size test</span>
+        <h2>Favicon giữ được silhouette đến 16px.</h2>
+        <div class="scale-row">
+          <span class="scale-item" style="--size: 16px"><img src="../../src/assets/brand/itsdd-favicon.png" alt="" />16</span>
+          <span class="scale-item" style="--size: 24px"><img src="../../src/assets/brand/itsdd-favicon.png" alt="" />24</span>
+          <span class="scale-item" style="--size: 32px"><img src="../../src/assets/brand/itsdd-favicon.png" alt="" />32</span>
+          <span class="scale-item" style="--size: 64px"><img src="../../src/assets/brand/itsdd-favicon.png" alt="" />64</span>
+          <span class="scale-item" style="--size: 128px"><img src="../../src/assets/brand/itsdd-favicon.png" alt="" />128</span>
+        </div>
+      </article>
+    </section>
+
+    <section class="assets" aria-labelledby="assets-title">
+      <span class="eyebrow">Production assets</span>
+      <h2 id="assets-title">Bộ file đã gắn vào dự án</h2>
+      <ul class="asset-list">
+        <li><a href="../../src/assets/brand/itsdd-logo-on-dark.png"><code>itsdd-logo-on-dark.png</code><span>transparent</span></a></li>
+        <li><a href="../../src/assets/brand/itsdd-logo-on-light.png"><code>itsdd-logo-on-light.png</code><span>transparent</span></a></li>
+        <li><a href="../../src/assets/brand/itsdd-mark-on-dark.png"><code>itsdd-mark-on-dark.png</code><span>transparent</span></a></li>
+        <li><a href="../../src/assets/brand/itsdd-mark-on-light.png"><code>itsdd-mark-on-light.png</code><span>transparent</span></a></li>
+        <li><a href="../../src/assets/brand/itsdd-favicon.png"><code>itsdd-favicon.png</code><span>512 × 512</span></a></li>
+        <li><a href="../../src/assets/brand/itsdd-gpt-image-2.png"><code>itsdd-gpt-image-2.png</code><span>generation source</span></a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <span>Nguyễn Trung Đức · itsdd.vn</span>
+    <span>Signal orange #F56D03 · Operating ink #100805</span>
+  </footer>
+</body>
+</html>
