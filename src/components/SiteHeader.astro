@@ -3,7 +3,7 @@ import { Image } from "astro:assets";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
 import LocalizedSearch from "./LocalizedSearch.astro";
 import { getFounderProfile } from "../data/founder-profile";
-import logo from "../assets/brand/itsdd-logo-on-dark.png";
+import logo from "../assets/brand/itsdd-mascot-logo-on-dark.png";
 import { localePath, type SiteLocale } from "../utils/i18n";
 
 interface Props {
@@ -24,8 +24,8 @@ const homeHref = localePath(locale, "/");
 			<Image
 				src={logo}
 				alt=""
-				widths={[146, 292]}
-				sizes="146px"
+				widths={[150, 300]}
+				sizes="150px"
 				loading="eager"
 				fetchpriority="high"
 			/>
@@ -122,7 +122,7 @@ const homeHref = localePath(locale, "/");
 	}
 
 	.site-title :global(img) {
-		width: 146px;
+		width: 150px;
 		height: auto;
 		display: block;
 	}
