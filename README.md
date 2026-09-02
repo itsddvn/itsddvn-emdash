@@ -1,6 +1,6 @@
 # itsdd.vn
 
-A dark editorial site for founder notes on AI products, agentic work, and operating systems, built with [EmDash](https://github.com/emdash-cms/emdash) and deployed on Cloudflare Workers with D1 and R2.
+A dual-theme editorial site for founder notes on AI products, agentic work, and operating systems, built with [EmDash](https://github.com/emdash-cms/emdash) and deployed on Cloudflare Workers with D1 and R2.
 
 ## What's Included
 
@@ -41,10 +41,14 @@ pages require the canonical unprefixed path.
 
 ## Visual System
 
-The public site uses a dark editorial-industrial direction for founder and
-AI-operations content. One warm orange accent keeps hierarchy dependent on
-typography, spacing, and rules instead of decorative colour. Archivo carries
-display roles; Source Sans 3 carries reading and interface copy.
+The public site uses the CPPAI dual theme locked 2026-09-02: cam tươi `#F48F29`
+is the action color; nâu đất `#893B12` is supporting only. Dark mode is OLED
+`#080808` / `#111111` with bone text. Light mode is silver `#EBE9E6` / `#F7F6F4`
+with ink text. Primary CTAs are cam fill with black `#0A0A0A` labels. Cam is not
+used as body text on silver or white. The theme switch follows the operating-system
+preference initially and persists an explicit visitor choice. Be Vietnam Pro
+carries display and reading roles; Fira Code is reserved for identifiers and
+technical notation.
 
 Equivalent elements share semantic roles across localized and CMS-backed
 routes. Page-specific styles may own composition, but must not redefine a
@@ -97,3 +101,10 @@ pnpm deploy
 ## Reference
 
 - [EmDash documentation](https://docs.emdashcms.com)
+
+### EmDash MCP scope
+
+EmDash MCP registrations are intentionally project-scoped because
+`emdash-site` targets this deployment. The owning files are [`.mcp.json`](.mcp.json),
+`.cursor/mcp.json`, and `.vscode/mcp.json`. Do not duplicate `emdash-docs` or
+`emdash-site` in a user-level or global MCP configuration.

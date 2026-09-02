@@ -50,7 +50,7 @@ export default defineConfig({
 	fonts: [
 		{
 			provider: fontProviders.google(),
-			name: "Source Sans 3",
+			name: "Be Vietnam Pro",
 			cssVariable: "--font-body",
 			weights: [400, 500, 600, 700],
 			styles: ["normal"],
@@ -59,12 +59,12 @@ export default defineConfig({
 		},
 		{
 			provider: fontProviders.google(),
-			name: "Archivo",
-			cssVariable: "--font-heading",
-			weights: [500, 600, 700],
+			name: "Fira Code",
+			cssVariable: "--font-mono",
+			weights: [400, 500, 600],
 			styles: ["normal"],
 			subsets: ["latin", "latin-ext", "vietnamese"],
-			fallbacks: ["sans-serif"],
+			fallbacks: ["monospace"],
 		},
 	],
 	devToolbar: { enabled: false },

@@ -1,0 +1,143 @@
+---
+import type { SiteLocale } from "../utils/i18n";
+
+interface Props {
+	locale: SiteLocale;
+}
+
+const { locale } = Astro.props;
+const copy =
+	locale === "vi"
+		? {
+				toggle: "Đổi giao diện",
+				toLight: "Chuyển sang giao diện sáng",
+				toDark: "Chuyển sang giao diện tối",
+			}
+		: {
+				toggle: "Change theme",
+				toLight: "Switch to light theme",
+				toDark: "Switch to dark theme",
+			};
+---
+
+<button
+	class="theme-toggle"
+	type="button"
+	aria-label={copy.toggle}
+	title={copy.toggle}
+	data-label-light={copy.toLight}
+	data-label-dark={copy.toDark}
+>
+	<svg
+		class="theme-icon theme-icon--sun"
+		aria-hidden="true"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+	>
+		<circle cx="12" cy="12" r="4"></circle>
+		<path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"></path>
+	</svg>
+	<svg
+		class="theme-icon theme-icon--moon"
+		aria-hidden="true"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+	>
+		<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+	</svg>
+</button>
+
+<script>
+	const themeToggle = document.querySelector<HTMLButtonElement>(".theme-toggle");
+	const themeMedia = window.matchMedia("(prefers-color-scheme: light)");
+
+	const currentTheme = () =>
+		document.documentElement.dataset.theme ??
+		(themeMedia.matches ? "light" : "dark");
+
+	const renderThemeToggle = () => {
+		if (!themeToggle) return;
+		const theme = currentTheme();
+		const nextLabel =
+			theme === "dark"
+				? themeToggle.dataset.labelLight
+				: themeToggle.dataset.labelDark;
+		themeToggle.dataset.themeValue = theme;
+		if (nextLabel) {
+			themeToggle.setAttribute("aria-label", nextLabel);
+			themeToggle.title = nextLabel;
+		}
+	};
+
+	themeToggle?.addEventListener("click", () => {
+		const nextTheme = currentTheme() === "dark" ? "light" : "dark";
+		document.documentElement.dataset.theme = nextTheme;
+		try {
+			localStorage.setItem("itsdd-theme", nextTheme);
+		} catch {}
+		renderThemeToggle();
+	});
+
+	themeMedia.addEventListener("change", () => {
+		if (!document.documentElement.dataset.theme) renderThemeToggle();
+	});
+
+	renderThemeToggle();
+</script>
+
+<style>
+	.theme-toggle {
+		width: var(--control-height);
+		height: var(--control-height);
+		display: inline-grid;
+		place-items: center;
+		padding: 0;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius);
+		background: var(--color-surface);
+		color: var(--color-text-secondary);
+		cursor: pointer;
+		transition:
+			transform var(--transition-fast),
+			background-color var(--transition-base),
+			border-color var(--transition-base),
+			color var(--transition-base);
+	}
+
+	.theme-toggle:hover,
+	.theme-toggle:focus-visible {
+		border-color: var(--color-action);
+		background: var(--color-brand-soft);
+		color: var(--color-brand);
+		transform: translateY(-2px);
+	}
+
+	.theme-toggle:active {
+		transform: translateY(1px);
+	}
+
+	.theme-icon {
+		width: 18px;
+		height: 18px;
+	}
+
+	.theme-icon--moon {
+		display: none;
+	}
+
+	.theme-toggle[data-theme-value="light"] .theme-icon--sun {
+		display: none;
+	}
+
+	.theme-toggle[data-theme-value="light"] .theme-icon--moon {
+		display: block;
+	}
+</style>

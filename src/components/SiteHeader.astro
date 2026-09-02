@@ -2,8 +2,10 @@
 import { Image } from "astro:assets";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
 import LocalizedSearch from "./LocalizedSearch.astro";
+import ThemeToggle from "./ThemeToggle.astro";
 import { getFounderProfile } from "../data/founder-profile";
-import logo from "../assets/brand/itsdd-mascot-logo-on-dark.png";
+import logoDark from "../assets/brand/itsdd-mascot-logo-on-dark.png";
+import logoLight from "../assets/brand/itsdd-mascot-logo.png";
 import { localePath, type SiteLocale } from "../utils/i18n";
 
 interface Props {
@@ -16,18 +18,40 @@ interface Props {
 const { locale, localePaths, menuItems, isLoggedIn = false } = Astro.props;
 const profile = getFounderProfile(locale);
 const homeHref = localePath(locale, "/");
+const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
+const navPath = (url: string) => {
+	try {
+		return new URL(url, Astro.url).pathname.replace(/\/$/, "") || "/";
+	} catch {
+		return url.replace(/\/$/, "") || "/";
+	}
+};
+const isCurrentNav = (url: string) => {
+	const path = navPath(url);
+	if (path === "/" || path === "/en") return currentPath === path;
+	return currentPath === path || currentPath.startsWith(`${path}/`);
+};
 ---
 
 <header class="site-header founder-header">
 	<div class="header-inner">
 		<a class="site-title founder-brand" href={homeHref} aria-label="itsdd.vn">
 			<Image
-				src={logo}
+				class="brand-logo brand-logo--dark"
+				src={logoDark}
 				alt=""
 				widths={[150, 300]}
 				sizes="150px"
 				loading="eager"
 				fetchpriority="high"
+			/>
+			<Image
+				class="brand-logo brand-logo--light"
+				src={logoLight}
+				alt=""
+				widths={[150, 300]}
+				sizes="150px"
+				loading="eager"
 			/>
 		</a>
 
@@ -38,6 +62,7 @@ const homeHref = localePath(locale, "/");
 						href={item.url}
 						target={item.target}
 						rel={item.target === "_blank" ? "noopener noreferrer" : undefined}
+						aria-current={isCurrentNav(item.url) ? "page" : undefined}
 					>
 						{item.label}
 					</a>
@@ -56,6 +81,7 @@ const homeHref = localePath(locale, "/");
 					</a>
 				)
 			}
+			<ThemeToggle locale={locale} />
 			<div class="language-slot">
 				<LanguageSwitcher paths={localePaths} />
 			</div>
@@ -92,25 +118,26 @@ const homeHref = localePath(locale, "/");
 	.site-header {
 		position: sticky;
 		top: 8px;
-		z-index: 30;
+		z-index: 20;
 		width: min(calc(100% - 32px), 1320px);
 		margin: 16px auto 0;
 		border: 1px solid var(--color-border);
 		border-radius: var(--radius);
-		background: color-mix(in oklch, var(--color-bg) 92%, transparent);
-		backdrop-filter: blur(14px);
+		background: var(--color-header);
+		box-shadow: var(--shadow-sm);
+		backdrop-filter: blur(var(--surface-blur));
 	}
 
 	.header-inner {
-		min-height: 64px;
+		min-height: var(--nav-height);
 		display: flex;
 		align-items: center;
 		gap: 24px;
-		padding: 0 24px;
+		padding: 0 20px;
 	}
 
 	.site-title {
-		min-height: 44px;
+		min-height: var(--control-height);
 		display: inline-flex;
 		align-items: center;
 		color: var(--color-text);
@@ -127,26 +154,67 @@ const homeHref = localePath(locale, "/");
 		display: block;
 	}
 
+	.site-title :global(.brand-logo--light) {
+		display: none;
+	}
+
+	:global(html[data-theme="light"]) .site-title :global(.brand-logo--dark) {
+		display: none;
+	}
+
+	:global(html[data-theme="light"]) .site-title :global(.brand-logo--light) {
+		display: block;
+	}
+
+	:global(html[data-theme="dark"]) .site-title :global(.brand-logo--dark) {
+		display: block;
+	}
+
+	:global(html[data-theme="dark"]) .site-title :global(.brand-logo--light) {
+		display: none;
+	}
+
 	.primary-nav {
 		display: flex;
 		align-items: center;
-		gap: 24px;
+		gap: 8px;
 		margin-inline: auto;
 	}
 
 	.primary-nav > a {
-		min-height: 44px;
+		position: relative;
+		min-height: var(--control-height);
 		display: inline-flex;
 		align-items: center;
+		padding: 0 10px;
+		border-radius: var(--radius);
 		color: var(--color-text-secondary);
 		font-size: var(--type-meta-size);
-		font-weight: 600;
+		font-weight: 400;
 		text-decoration: none;
 	}
 
 	.primary-nav a:hover,
 	.primary-nav a:focus-visible {
+		color: var(--color-text);
+		background: var(--color-surface-hover);
+	}
+
+	.primary-nav a[aria-current="page"] {
+		background: var(--color-brand-soft);
 		color: var(--color-brand);
+		font-weight: 600;
+	}
+
+	.primary-nav a[aria-current="page"]::before {
+		position: absolute;
+		top: 8px;
+		bottom: 8px;
+		left: 0;
+		width: 3px;
+		border-radius: 2px;
+		background: var(--color-action);
+		content: "";
 	}
 
 
@@ -165,30 +233,40 @@ const homeHref = localePath(locale, "/");
 	}
 
 	.admin-link {
-		min-height: 44px;
+		min-height: var(--control-height);
 		display: inline-flex;
 		align-items: center;
 		color: var(--color-text-secondary);
 		font-size: var(--type-meta-size);
-		font-weight: 600;
+		font-weight: 500;
 		text-decoration: none;
 	}
 
 	.admin-link:hover,
 	.admin-link:focus-visible {
-		color: var(--color-brand);
+		color: var(--color-text);
 	}
 
 	.menu-toggle {
-		min-height: 44px;
+		min-height: var(--control-height-touch);
 		display: none;
 		padding: 0 16px;
 		border: 1px solid var(--color-border);
 		border-radius: var(--radius);
 		background: var(--color-surface);
 		color: var(--color-text);
-		font: 700 0.875rem var(--font-body);
+		font: 600 0.875rem var(--font-body);
 		cursor: pointer;
+	}
+
+	@media (prefers-color-scheme: light) {
+		:global(html:not([data-theme])) .site-title :global(.brand-logo--dark) {
+			display: none;
+		}
+
+		:global(html:not([data-theme])) .site-title :global(.brand-logo--light) {
+			display: block;
+		}
 	}
 
 	@media (max-width: 860px) {
@@ -227,7 +305,8 @@ const homeHref = localePath(locale, "/");
 
 		.primary-nav > a {
 			width: 100%;
-			padding-inline: 8px;
+			min-height: var(--control-height-touch);
+			padding-inline: 12px;
 			border-bottom: 1px solid var(--color-border-subtle);
 		}
 

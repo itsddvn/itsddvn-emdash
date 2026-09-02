@@ -1,26 +1,36 @@
-/* Founder Operating System visual contract. */
+/* CPPAI cam tươi hành động, nâu đất hỗ trợ. OLED dark / bạc light. */
 :root {
-	color-scheme: dark;
-	--color-bg: oklch(0.145 0.018 48);
-	--color-bg-subtle: oklch(0.22 0.028 48);
-	--color-text: oklch(0.96 0.012 75);
-	--color-text-secondary: oklch(0.8 0.022 70);
-	--color-muted: oklch(0.64 0.028 60);
-	--color-border: oklch(0.34 0.035 48);
-	--color-border-subtle: oklch(0.27 0.028 48);
-	--color-surface: oklch(0.18 0.022 48);
-	--color-brand: oklch(0.69 0.19 47);
-	--color-brand-hover: oklch(0.76 0.18 52);
-	--color-brand-active: oklch(0.6 0.19 42);
-	--color-brand-soft: oklch(0.25 0.07 48);
-	--color-on-brand: oklch(0.145 0.018 48);
-	--color-brand-ring: color-mix(in oklch, var(--color-brand) 36%, transparent);
-	--color-earth: oklch(0.72 0.15 48);
-	--color-earth-deep: oklch(0.12 0.016 45);
-	--color-inverse: oklch(0.96 0.012 75);
-	--color-inverse-muted: oklch(0.72 0.025 58);
+	color-scheme: light dark;
+	--color-bg: light-dark(#ebe9e6, #080808);
+	--color-bg-subtle: light-dark(#f7f6f4, #111111);
+	--color-text: light-dark(#1b1917, #f5f3f0);
+	--color-text-secondary: light-dark(#4b4742, #c7c2bc);
+	--color-muted: light-dark(#746e68, #8f8a84);
+	--color-border: light-dark(#ddd9d4, rgba(255, 255, 255, 0.085));
+	--color-border-subtle: light-dark(#e6e2dd, rgba(255, 255, 255, 0.055));
+	--color-surface: light-dark(#ffffff, #171717);
+	--color-surface-hover: light-dark(#f0eeeb, #1c1c1c);
+	--color-brand: light-dark(#76320b, #f6a34f);
+	--color-brand-hover: light-dark(#893b12, #f48f29);
+	--color-brand-active: light-dark(#75340b, #e07d18);
+	--color-brand-soft: light-dark(rgba(244, 143, 41, 0.13), rgba(244, 143, 41, 0.1));
+	--color-on-brand: light-dark(#76320b, #f5f3f0);
+	--color-action: #f48f29;
+	--color-action-hover: #e07d18;
+	--color-on-action: #0a0a0a;
+	--color-action-shadow: 0 2px 8px rgba(244, 143, 41, 0.22);
+	--color-brand-ring: light-dark(rgba(244, 143, 41, 0.32), rgba(244, 143, 41, 0.38));
+	--color-earth: #893b12;
+	--color-earth-soft: light-dark(rgba(137, 59, 18, 0.08), rgba(137, 59, 18, 0.18));
+	--color-earth-deep: #75340b;
+	--color-inverse: light-dark(#080808, #f5f3f0);
+	--color-inverse-muted: light-dark(#4b4742, #c7c2bc);
+	--color-header: light-dark(rgba(251, 250, 248, 0.94), rgba(8, 8, 8, 0.94));
+	--surface-blur: light-dark(0px, 16px);
+	--shadow-sm: light-dark(0 1px 2px rgba(10, 10, 10, 0.08), none);
+	--shadow-lg: light-dark(0 12px 28px rgba(10, 10, 10, 0.12), 0 12px 32px rgba(0, 0, 0, 0.55));
 
-	--font-mono: "SFMono-Regular", "Cascadia Code", Consolas, monospace;
+	--font-heading: var(--font-body);
 	--font-weight-heading: 600;
 	--font-weight-display: 700;
 	--font-size-base: 1rem;
@@ -34,16 +44,22 @@
 	--wide-width: 1320px;
 	--gutter-width: 200px;
 	--meta-col-width: 180px;
-	--nav-height: 64px;
+	--nav-height: 52px;
 	--search-input-width: 224px;
 
-	--radius: 8px;
+	--radius: 6px;
 	--radius-lg: 12px;
-	--shadow-sm: none;
-	--shadow-lg: none;
-	--transition-fast: 150ms cubic-bezier(0.22, 1, 0.36, 1);
-	--transition-base: 250ms cubic-bezier(0.22, 1, 0.36, 1);
-	--ease-out-quart: cubic-bezier(0.22, 1, 0.36, 1);
+	--transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+	--transition-base: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+	--ease-out-quart: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+:root[data-theme="light"] {
+	color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+	color-scheme: dark;
 }
 
 @layer base;
@@ -135,8 +151,8 @@
 	}
 
 	::selection {
-		background: var(--color-brand);
-		color: var(--color-on-brand);
+		background: var(--color-action);
+		color: var(--color-on-action);
 	}
 }
 

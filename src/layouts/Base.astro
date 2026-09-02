@@ -92,9 +92,18 @@ const currentYear = new Date().getFullYear();
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script is:inline>
+			document.documentElement.classList.replace("no-js", "js");
+			try {
+				const theme = localStorage.getItem("itsdd-theme");
+				if (theme === "light" || theme === "dark") {
+					document.documentElement.dataset.theme = theme;
+				}
+			} catch {}
+		</script>
 		<link rel="icon" type="image/png" href={favicon.src} />
 		<Font cssVariable="--font-body" preload />
-		<Font cssVariable="--font-heading" />
+		<Font cssVariable="--font-mono" />
 		<title>{fullTitle}</title>
 		<EmDashHead page={pageCtx} />
 		{
@@ -109,9 +118,7 @@ const currentYear = new Date().getFullYear();
 			title={`${profile.navigation.articles} RSS`}
 			href={localePath(locale, "/rss.xml").replace(/\/$/, "")}
 		/>
-		<script is:inline>
-			document.documentElement.classList.replace("no-js", "js");
-		</script>
+
 	</head>
 	<body class={bodyClass}>
 		<EmDashBodyStart page={pageCtx} />
