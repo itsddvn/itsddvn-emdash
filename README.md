@@ -48,7 +48,11 @@ with ink text. Primary CTAs are cam fill with black `#0A0A0A` labels. Cam is not
 used as body text on silver or white. The theme switch follows the operating-system
 preference initially and persists an explicit visitor choice. Be Vietnam Pro
 carries display and reading roles; Fira Code is reserved for identifiers and
-technical notation. Type uses three sizes: display for h1, 14px body, 12px meta.
+technical notation. Type uses three sizes only: display (`clamp(1.75rem, 4vw, 2.25rem)`)
+for h1 and section h2, 18px body for prose/h3/CTA, 14px meta for chrome. New
+UI must use `ui-page-title` / `ui-section-title` (display), `ui-card-title` /
+`ui-body` / `ui-lead` (body), or `ui-meta` / `ui-eyebrow` (meta). Do not add a
+fourth size.
 
 Equivalent elements share semantic roles across localized and CMS-backed
 routes. Page-specific styles may own composition, but must not redefine a

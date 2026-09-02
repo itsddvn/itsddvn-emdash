@@ -33,16 +33,17 @@
 	--font-heading: var(--font-body);
 	--font-weight-heading: 600;
 	--font-weight-display: 700;
-	--font-size-base: 0.875rem;
-	--font-size-sm: 0.75rem;
+	--font-size-base: 1.125rem;
+	--font-size-sm: 0.875rem;
+	--leading-relaxed: 1.6;
 	--tracking-tight: -0.03em;
 	--tracking-snug: -0.015em;
 
-	--content-width: 680px;
+	--content-width: 42rem;
 	--wide-width: 1320px;
 	--gutter-width: 200px;
 	--meta-col-width: 180px;
-	--nav-height: 52px;
+	--nav-height: 56px;
 	--search-input-width: 224px;
 
 	--radius: 6px;

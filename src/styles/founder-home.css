@@ -85,12 +85,11 @@
 }
 
 .founder-hero {
-	min-height: 600px;
 	display: grid;
 	grid-template-columns: minmax(320px, 5fr) minmax(0, 7fr);
 	align-items: center;
-	gap: 64px;
-	padding: 56px 64px;
+	gap: 40px;
+	padding: 32px;
 }
 
 .founder-hero-copy {
@@ -139,8 +138,8 @@
 	display: grid;
 	grid-template-columns: minmax(0, 7fr) minmax(320px, 5fr);
 	align-items: center;
-	gap: 56px;
-	padding: 56px 64px;
+	gap: 40px;
+	padding: 32px;
 }
 
 .illustration-frame,
@@ -212,7 +211,7 @@
 
 .systems-section,
 .founder-writing {
-	padding: 56px 64px;
+	padding: 32px;
 }
 
 .founder-section-head {
@@ -414,8 +413,8 @@
 	display: grid;
 	grid-template-columns: minmax(0, 5fr) minmax(320px, 7fr);
 	align-items: center;
-	gap: 48px;
-	padding: 48px 64px;
+	gap: 32px;
+	padding: 32px;
 }
 
 .founder-contact h2 {
@@ -444,7 +443,7 @@
 	.operating-showcase,
 	.systems-section,
 	.founder-writing {
-		padding: 48px;
+		padding: 24px;
 	}
 
 	.founder-hero-copy {
@@ -480,12 +479,12 @@
 	.systems-section,
 	.founder-writing,
 	.founder-contact {
-		padding: 28px 24px;
+		padding: 24px;
 	}
 
 	.founder-hero {
 		min-height: auto;
-		gap: 36px;
+		gap: 24px;
 	}
 
 	.founder-hero h1 {

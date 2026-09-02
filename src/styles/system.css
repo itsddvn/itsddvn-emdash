@@ -1,18 +1,19 @@
 :root {
-	/* Three sizes only: display, body 14, meta 12. Hierarchy via weight and color. */
-	--type-display-size: clamp(1.75rem, 4.2vw, 2.25rem);
-	--type-body-size: 0.875rem;
-	--type-meta-size: 0.75rem;
+	/* Public site type contract. Do not add a fourth size.
+	   display = h1 and section h2. body = 18px prose/h3/CTA. meta = 14px chrome. */
+	--type-display-size: clamp(1.75rem, 4vw, 2.25rem);
+	--type-body-size: 1.125rem;
+	--type-meta-size: 0.875rem;
 	--type-page-title-size: var(--type-display-size);
 	--type-compact-display-size: var(--type-display-size);
-	--type-section-title-size: var(--type-body-size);
+	--type-section-title-size: var(--type-display-size);
 	--type-card-title-size: var(--type-body-size);
 	--type-lead-size: var(--type-body-size);
 	--type-label-size: var(--type-meta-size);
 	--type-micro-size: var(--type-meta-size);
 	--type-display-leading: 1.12;
-	--type-heading-leading: 1.25;
-	--type-body-leading: var(--leading-relaxed);
+	--type-heading-leading: 1.12;
+	--type-body-leading: 1.6;
 	--measure-body: 65ch;
 
 	/* Shared layout and control roles */
@@ -223,8 +224,9 @@
 }
 
 .ui-prose {
-	font-size: var(--type-lead-size);
-	line-height: 1.8;
+	max-width: 65ch;
+	font-size: var(--type-body-size);
+	line-height: var(--type-body-leading);
 }
 
 .ui-prose :where(p, ul, ol, blockquote, pre) {
@@ -236,13 +238,16 @@
 }
 
 .ui-prose h2 {
-	margin: 2.5em 0 0.75em;
+	margin: 2em 0 0.6em;
 	font-size: var(--type-section-title-size);
+	line-height: var(--type-display-leading);
+	font-weight: var(--font-weight-heading);
 }
 
 .ui-prose h3 {
-	margin: 2em 0 0.5em;
+	margin: 1.5em 0 0.5em;
 	font-size: var(--type-card-title-size);
+	font-weight: var(--font-weight-heading);
 }
 
 .ui-prose blockquote {
