@@ -48,7 +48,7 @@ with ink text. Primary CTAs are cam fill with black `#0A0A0A` labels. Cam is not
 used as body text on silver or white. The theme switch follows the operating-system
 preference initially and persists an explicit visitor choice. Be Vietnam Pro
 carries display and reading roles; Fira Code is reserved for identifiers and
-technical notation.
+technical notation. Type uses three sizes: display for h1, 14px body, 12px meta.
 
 Equivalent elements share semantic roles across localized and CMS-backed
 routes. Page-specific styles may own composition, but must not redefine a
