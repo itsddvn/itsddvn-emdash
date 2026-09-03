@@ -1,0 +1,58 @@
+<!doctype html>
+<html class="no-js" lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bài Viết · Layout prototype</title>
+  <script>document.documentElement.classList.replace("no-js", "js")</script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="prototype.js" defer></script>
+</head>
+<body>
+  <div class="prototype-banner">Blog index prototype · Ba section, một feed chung · <a href="index.html">Xem toàn bộ layout</a></div>
+  <header class="site-header">
+    <div class="header-inner shell">
+      <a class="brand" href="home.html">itsdd<span>.vn</span></a>
+      <nav class="primary-nav" id="primary-nav" aria-label="Điều hướng chính">
+        <a href="home.html#work">Công việc</a><a href="home.html#practice">Cách làm</a><a href="home.html#about">Giới thiệu</a>
+        <div class="nav-group">
+          <a class="nav-parent-link" aria-current="page" href="posts.html">Bài Viết</a>
+          <button class="nav-disclosure" type="button" aria-label="Mở danh mục Bài Viết" aria-expanded="false" aria-controls="article-submenu"></button>
+          <div class="submenu" id="article-submenu" hidden><a href="category-ai-tools.html">AI Tools</a><a href="category.html">AI Coding</a><a href="category-ai-working.html">AI Working</a></div>
+        </div>
+      </nav>
+      <div class="header-tools"><span class="locale">VI / EN</span><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu</button></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero shell">
+      <p class="eyebrow">Articles / Field notes</p>
+      <h1>Bài Viết</h1>
+      <p class="lede">Ghi chép từ công việc thật: công cụ tôi dùng và xây, cách AI thay đổi việc phát triển phần mềm, và cách đưa AI vào vận hành của một đội ngũ hoặc doanh nghiệp.</p>
+      <div class="category-entries" aria-label="Các nhóm Bài Viết">
+        <a class="category-entry" href="category-ai-tools.html"><span class="eyebrow">01</span><strong>AI Tools</strong><p>Công cụ, cách dùng, tích hợp và giới hạn thực tế.</p></a>
+        <a class="category-entry" href="category.html"><span class="eyebrow">02</span><strong>AI Coding</strong><p>Coding agent, kiến trúc, kiểm thử, review và shipping.</p></a>
+        <a class="category-entry" href="category-ai-working.html"><span class="eyebrow">03</span><strong>AI Working</strong><p>Sản phẩm, workflow, dữ liệu, con người và vận hành với AI.</p></a>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <p class="section-label">Featured field note</p>
+      <article class="featured-story">
+        <div class="featured-visual" role="img" aria-label="Khung bằng chứng trực quan cho bài viết nổi bật"></div>
+        <div class="featured-copy"><span class="eyebrow">AI Coding · 8 phút đọc</span><h2>Bảy failure mode nhỏ làm một agent platform mất tin cậy</h2><p>Một platform không thất bại chỉ vì model. Nó thất bại ở những giao điểm: permission gặp UX, provider state gặp onboarding, startup order gặp channel lifecycle.</p><a class="text-link" href="article.html">Đọc bài viết →</a></div>
+      </article>
+
+      <div class="article-list" aria-label="Bài viết mới nhất">
+        <a class="article-row" href="article.html"><span class="category">AI Working</span><div><h2>Đừng gọi AI là năng lực vận hành khi workflow vẫn rời rạc</h2><p>Từ demo đến vòng lặp dữ liệu, quyền quyết định và đường xử lý ngoại lệ.</p></div><time datetime="2026-08-22">22.08.2026 · 6 phút</time><span class="arrow">↗</span></a>
+        <a class="article-row" href="article.html"><span class="category">AI Tools</span><div><h2>Một công cụ AI tốt cần nói rõ giới hạn ở đâu</h2><p>Đánh giá tool bằng task, context, trade-off và observed limitation.</p></div><time datetime="2026-08-15">15.08.2026 · 5 phút</time><span class="arrow">↗</span></a>
+        <a class="article-row" href="article.html"><span class="category">AI Coding</span><div><h2>Quality gate nào còn đứng vững khi coding agent làm việc nhanh hơn?</h2><p>Source, test, runtime observation và review phải kể cùng một câu chuyện.</p></div><time datetime="2026-08-09">09.08.2026 · 7 phút</time><span class="arrow">↗</span></a>
+        <a class="article-row" href="article.html"><span class="category">AI Working</span><div><h2>Codify không phải viết thêm tài liệu</h2><p>Biến quyết định tốt thành đường đi có guardrail, bằng chứng và tiêu chí dừng.</p></div><time datetime="2026-08-02">02.08.2026 · 6 phút</time><span class="arrow">↗</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="footer-inner shell"><span>© 2026 Nguyễn Trung Đức</span><a href="home.html">Về homepage</a></div></footer>
+</body>
+</html>

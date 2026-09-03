@@ -1,0 +1,85 @@
+<!doctype html>
+<html class="no-js" lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bảy failure mode nhỏ · Article prototype</title>
+  <script>document.documentElement.classList.replace("no-js", "js")</script>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="article-reading.css?v=article-theme-2">
+  <script src="prototype.js" defer></script>
+</head>
+<body class="article-page">
+  <div class="prototype-banner">Article prototype · Nội dung mẫu để kiểm tra reading layout · <a href="index.html">Xem toàn bộ layout</a></div>
+  <header class="site-header">
+    <div class="header-inner shell">
+      <a class="brand" href="home.html">itsdd<span>.vn</span></a>
+      <nav class="primary-nav" id="primary-nav" aria-label="Điều hướng chính">
+        <a href="home.html#work">Công việc</a><a href="home.html#practice">Cách làm</a><a href="home.html#about">Giới thiệu</a>
+        <div class="nav-group">
+          <a class="nav-parent-link" aria-current="page" href="posts.html">Bài Viết</a>
+          <button class="nav-disclosure" type="button" aria-label="Mở danh mục Bài Viết" aria-expanded="false" aria-controls="article-submenu"></button>
+          <div class="submenu" id="article-submenu" hidden><a href="category-ai-tools.html">AI Tools</a><a href="category.html">AI Coding</a><a href="category-ai-working.html">AI Working</a></div>
+        </div>
+      </nav>
+      <div class="header-tools"><span class="locale">VI / EN</span><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu</button></div>
+    </div>
+  </header>
+
+  <main>
+    <header class="reading-header">
+      <div class="reading-title">
+        <div class="reading-title-main">
+          <p class="eyebrow">AI Coding / Platform reliability</p>
+          <h1>Bảy failure mode nhỏ làm một agent platform mất tin cậy</h1>
+          <p class="dek">Một platform không thất bại chỉ vì model. Nó thất bại ở những giao điểm: permission gặp UX, provider state gặp onboarding, startup order gặp channel lifecycle.</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="reading-layout">
+      <aside class="article-meta" aria-label="Thông tin bài viết">
+        <dl>
+          <div><dt>Tác giả</dt><dd>Nguyễn Trung Đức</dd></div>
+          <div><dt>Xuất bản</dt><dd>29.08.2026</dd></div>
+          <div><dt>Thời gian đọc</dt><dd>8 phút</dd></div>
+          <div><dt>Primary section</dt><dd><a href="category.html">AI Coding</a></dd></div>
+        </dl>
+      </aside>
+
+      <article class="article-prose">
+        <p>Đây là nội dung mẫu dùng để kiểm tra nhịp đọc, hierarchy và sidebar. Mọi claim xuất bản cuối cùng vẫn phải đi qua content review và source verification.</p>
+        <p>Khi một hệ thống agent đi vào vận hành, những lỗi tạo mất niềm tin thường không nằm trong demo chính. Chúng nằm ở trạng thái provider chưa sẵn sàng, quyền truy cập bị suy diễn sai, một danh sách UI lấy dữ liệu từ nguồn không access-aware, hoặc một dispatcher khởi động sau khi channel đã bắt đầu nhận việc.</p>
+
+        <blockquote>Một failure mode nhỏ trở thành sự cố vận hành khi người dùng không thể phân biệt hệ thống đang thiếu cấu hình, thiếu quyền hay thực sự đã hỏng.</blockquote>
+
+        <h2 id="onboarding">1. Onboarding phải xác minh trước khi seed</h2>
+        <p>Nếu credential provider sai nhưng hệ thống vẫn tiếp tục tạo dữ liệu khởi đầu, lỗi cấu hình sẽ bị đẩy sang một bước xa hơn và khó hiểu hơn. Connectivity check cần diễn ra trước khi workflow coi provider là sẵn sàng.</p>
+        <p>Placeholder cũng là một phần của contract. Một field không có gợi ý đúng có thể khiến người vận hành nhập model hoặc endpoint theo một assumption không còn hợp lệ.</p>
+
+        <h2 id="access">2. UI phải dùng nguồn dữ liệu có ý thức về quyền</h2>
+        <p>Một agent đang active không đồng nghĩa mọi người dùng đều được phép thấy hoặc chọn nó. Trong managed mode, danh sách hiển thị cần đến từ store và access boundary phù hợp thay vì fallback sang toàn bộ registry.</p>
+        <h3>Permission không chỉ là backend guard</h3>
+        <p>Nếu backend chặn nhưng UI vẫn gợi ý một lựa chọn không hợp lệ, hệ thống vẫn tạo ra một failure path. Permission cần nhất quán từ query, state, selector đến action.</p>
+
+        <h2 id="policy">3. Policy được gọi phải thực sự được triển khai</h2>
+        <p>Một đường kiểm tra có tên đúng chưa đủ. Với công cụ thực thi, exemption cho đường dẫn hợp lệ phải tồn tại trong phần code thực tế; nếu không, guardrail trở thành nguồn false positive và phá workflow chính.</p>
+
+        <h2 id="startup">4. Startup order là một phần của reliability</h2>
+        <p>Outbound dispatcher phải sẵn sàng trước khi channel check hoặc luồng nhận việc có thể tạo message cần gửi. Thứ tự khởi động không phải chi tiết triển khai khi nó quyết định message có bị bỏ rơi hay không.</p>
+
+        <h2 id="conclusion">Kết luận</h2>
+        <p>Reliability của agent platform được xây tại những giao điểm ít hào nhoáng. Cách tốt nhất để giữ chúng rõ là mô tả failure mode, boundary và evidence thay vì gom mọi thay đổi dưới một nhãn “stability improvements”.</p>
+      </article>
+
+      <aside class="article-gutter" aria-label="Ngữ cảnh bài viết">
+        <div class="gutter-block"><h2>Tìm trong Bài Viết</h2><input class="search-box" type="search" placeholder="Tìm kiếm…" aria-label="Tìm trong Bài Viết"></div>
+        <nav class="gutter-block" aria-label="Mục lục"><h2>Trong bài này</h2><ol><li><a href="#onboarding">Onboarding</a></li><li><a href="#access">Access-aware UI</a></li><li><a href="#policy">Tool policy</a></li><li><a href="#startup">Startup order</a></li><li><a href="#conclusion">Kết luận</a></li></ol></nav>
+        <nav class="gutter-block" aria-label="Nhóm Bài Viết"><h2>Sections</h2><ul><li><a href="category-ai-tools.html">AI Tools</a></li><li><a href="category.html">AI Coding</a></li><li><a href="category-ai-working.html">AI Working</a></li></ul></nav>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="footer-inner shell"><span>© 2026 Nguyễn Trung Đức</span><a href="posts.html">← Tất cả Bài Viết</a></div></footer>
+</body>
+</html>

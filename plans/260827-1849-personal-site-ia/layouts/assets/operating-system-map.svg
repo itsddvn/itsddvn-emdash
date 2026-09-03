@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480" role="img" aria-labelledby="title desc">
+  <title id="title">Build, Operate, Codify</title>
+  <desc id="desc">Ba nút kết nối mô tả quá trình xây sản phẩm, vận hành và chuẩn hóa.</desc>
+  <style>
+    .frame { fill: oklch(0.18 0.022 48); stroke: oklch(0.34 0.035 48); }
+    .line { fill: none; stroke: oklch(0.69 0.19 47); stroke-width: 3; stroke-linecap: round; }
+    .flow { stroke-dasharray: 10 14; animation: flow 2.4s linear infinite; }
+    .node { fill: oklch(0.22 0.04 48); stroke: oklch(0.69 0.19 47); stroke-width: 2; }
+    .core { fill: oklch(0.69 0.19 47); }
+    .label { fill: oklch(0.96 0.012 75); font: 700 22px system-ui, sans-serif; letter-spacing: 1px; text-anchor: middle; }
+    .index { fill: oklch(0.69 0.19 47); font: 600 13px system-ui, sans-serif; text-anchor: middle; }
+    .pulse { transform-box: fill-box; transform-origin: center; animation: pulse 2.4s ease-in-out infinite; }
+    @keyframes flow { to { stroke-dashoffset: -48; } }
+    @keyframes pulse { 50% { transform: scale(1.12); opacity: .72; } }
+    @media (prefers-reduced-motion: reduce) { .flow, .pulse { animation: none; } }
+  </style>
+  <rect class="frame" x="1" y="1" width="718" height="478" rx="24"/>
+  <path class="line flow" d="M190 240H530"/>
+  <path class="line" opacity=".28" d="M190 240C280 76 440 76 530 240C440 404 280 404 190 240Z"/>
+  <g transform="translate(150 240)">
+    <polygon class="node" points="0,-72 62,-36 62,36 0,72 -62,36 -62,-36"/>
+    <circle class="core pulse" r="12"/>
+    <text class="label" y="108">BUILD</text>
+    <text class="index" y="132">01</text>
+  </g>
+  <g transform="translate(360 240)">
+    <polygon class="node" points="0,-82 71,-41 71,41 0,82 -71,41 -71,-41"/>
+    <circle class="core pulse" r="16" style="animation-delay:.35s"/>
+    <text class="label" y="118">OPERATE</text>
+    <text class="index" y="142">02</text>
+  </g>
+  <g transform="translate(570 240)">
+    <polygon class="node" points="0,-72 62,-36 62,36 0,72 -62,36 -62,-36"/>
+    <circle class="core pulse" r="12" style="animation-delay:.7s"/>
+    <text class="label" y="108">CODIFY</text>
+    <text class="index" y="132">03</text>
+  </g>
+</svg>
