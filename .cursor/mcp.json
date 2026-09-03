@@ -3,6 +3,10 @@
 		"emdash-docs": {
 			"type": "http",
 			"url": "https://docs.emdashcms.com/mcp"
+		},
+		"emdash-site": {
+			"type": "http",
+			"url": "https://itsdd.vn/_emdash/api/mcp"
 		}
 	}
 }
