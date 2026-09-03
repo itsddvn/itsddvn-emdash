@@ -14,6 +14,9 @@ export default defineConfig({
 		fallback: { en: "vi" },
 	},
 	output: "server",
+	server: {
+		allowedHosts: ["itsddvn-dev.cppsw.com"],
+	},
 	adapter: cloudflare(),
 	cache: {
 		provider: cacheCloudflare(),

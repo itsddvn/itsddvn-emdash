@@ -18,6 +18,7 @@ export interface FounderProfile {
 		articles: string;
 		articlesMenu: string;
 		menu: string;
+		contact: string;
 	};
 	hero: {
 		kicker: string;
@@ -74,6 +75,7 @@ const profiles: Record<SiteLocale, FounderProfile> = {
 			articles: "Bài Viết",
 			articlesMenu: "Mở danh mục Bài Viết",
 			menu: "Danh mục",
+			contact: "Liên hệ",
 		},
 		hero: {
 			kicker: "CEO CPPAI · Build · Operate · Codify",
@@ -146,6 +148,7 @@ const profiles: Record<SiteLocale, FounderProfile> = {
 			articles: "Articles",
 			articlesMenu: "Open article categories",
 			menu: "Menu",
+			contact: "Contact",
 		},
 		hero: {
 			kicker: "CEO CPPAI · Build · Operate · Codify",
@@ -209,12 +212,19 @@ const profiles: Record<SiteLocale, FounderProfile> = {
 	},
 };
 
+export const contactEmail = {
+	label: "Email",
+	href: "mailto:contact@itsdd.vn",
+	handle: "contact@itsdd.vn",
+	icon: "email",
+} as const;
+
 export const publicChannels = [
-	{ label: "GitHub", href: "https://github.com/itsddvn" },
-	{ label: "Facebook", href: "https://facebook.com/itsddvn" },
-	{ label: "TikTok", href: "https://www.tiktok.com/@itsddvn" },
-	{ label: "Telegram", href: "https://t.me/itsddvn" },
-	{ label: "YouTube", href: "https://www.youtube.com/@itsddvn" },
+	{ label: "GitHub", href: "https://github.com/itsddvn", handle: "itsddvn", icon: "github" },
+	{ label: "Facebook", href: "https://facebook.com/itsddvn", handle: "itsddvn", icon: "facebook" },
+	{ label: "TikTok", href: "https://www.tiktok.com/@itsddvn", handle: "@itsddvn", icon: "tiktok" },
+	{ label: "Telegram", href: "https://t.me/itsddvn", handle: "@itsddvn", icon: "telegram" },
+	{ label: "YouTube", href: "https://www.youtube.com/@itsddvn", handle: "@itsddvn", icon: "youtube" },
 ] as const;
 
 export function getFounderProfile(locale: SiteLocale): FounderProfile {

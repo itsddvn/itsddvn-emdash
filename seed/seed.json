@@ -262,6 +262,13 @@
 					"label": "Posts",
 					"url": "/en/posts",
 					"locale": "en"
+				},
+				{
+					"id": "item:primary:contact:en",
+					"type": "custom",
+					"label": "Contact",
+					"url": "/en/contact",
+					"locale": "en"
 				}
 			]
 		},
@@ -295,6 +302,14 @@
 					"url": "/posts",
 					"locale": "vi",
 					"translationOf": "item:primary:posts:en"
+				},
+				{
+					"id": "item:primary:contact:vi",
+					"type": "custom",
+					"label": "Liên hệ",
+					"url": "/contact",
+					"locale": "vi",
+					"translationOf": "item:primary:contact:en"
 				}
 			]
 		}

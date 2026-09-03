@@ -85,6 +85,27 @@ const xDefaultHref = alternatePaths.vi
 	: alternates[0]?.href;
 const isLoggedIn = Boolean(Astro.locals.user);
 const currentYear = new Date().getFullYear();
+const contactHref = localePath(locale, "/contact");
+const menuItems = (primaryMenu?.items ?? []).map((item) => ({
+	label: item.label,
+	url: item.url,
+	target: item.target,
+}));
+const hasContact = menuItems.some((item) => {
+	try {
+		const path = new URL(item.url, Astro.url).pathname.replace(/\/$/, "") || "/";
+		return path === contactHref || path.endsWith("/contact");
+	} catch {
+		return item.url.includes("/contact");
+	}
+});
+if (!hasContact) {
+	menuItems.push({
+		label: profile.navigation.contact,
+		url: contactHref,
+		target: null,
+	});
+}
 ---
 
 <!doctype html>
@@ -125,11 +146,7 @@ const currentYear = new Date().getFullYear();
 		<SiteHeader
 			locale={locale}
 			localePaths={switcherPaths}
-			menuItems={(primaryMenu?.items ?? []).map((item) => ({
-				label: item.label,
-				url: item.url,
-				target: item.target,
-			}))}
+			menuItems={menuItems}
 			isLoggedIn={isLoggedIn}
 		/>
 
