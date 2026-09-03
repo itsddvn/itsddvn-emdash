@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "prd-writer": {
+      "source": "pmprompt/claude-plugin-product-management",
+      "sourceType": "github",
+      "skillPath": "skills/prd-writer/SKILL.md",
+      "computedHash": "d225ececb30fd50c74e938b387b9794c2017fa3988e76c9457a743a6ca6ceba0"
+    }
+  }
+}
